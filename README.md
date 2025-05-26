@@ -112,7 +112,6 @@ Facilitar e otimizar o processo de agendamento de laboratórios, proporcionando 
 
 ## 📚 Links Úteis
 
-- [📖 Documentação do Projeto](https://unilab-frontend.vercel.app/documento.html) <!-- Substitua pelo link real se houver -->
-- [🌐 UniLab Deploy (Acesse aqui)]([https://unilab-deploy-url.com](https://unilab-frontend.vercel.app) <!-- Substitua pela URL real do deploy -->
+- [📖 Documentação do Projeto](https://unilab-frontend.vercel.app/documento.html)
 
 ---
