@@ -3,6 +3,7 @@
     Copyright © 2025 Rafael V. Gogge
     Projeto: UniLab - Sistema de Gerenciamento de Laboratórios
 */
+
 // Dados dos tutoriais (exemplo)
 const tutorials = [
     {

@@ -2,7 +2,6 @@
     Autor: Rafael V. Gogge
     Copyright © 2025 Rafael V. Gogge
     Projeto: UniLab - Sistema de Gerenciamento de Laboratórios
-    Enhanced by v0
 */
 document.addEventListener("DOMContentLoaded", () => {
     // Seleção de elementos do DOM
