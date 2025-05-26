@@ -1,0 +1,1488 @@
+/* 
+    Autor: Rafael V. Gogge
+    Copyright © 2025 Rafael V. Gogge
+    Projeto: UniLab - Sistema de Gerenciamento de Laboratórios
+*/
+
+/* Variáveis de cores */
+:root {
+    /* Cores principais */
+    --primary-color: #030a8c;
+    --secondary-color: #0511f2;
+    --text-color: #f9fbfa;
+    --accent-color: #0D6EFD;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+
+    /* Backgrounds e cards */
+    --card-bg: rgba(255, 255, 255, 0.1);
+    --card-hover-bg: rgba(255, 255, 255, 0.15);
+    --modal-bg: #2c2c2c;
+    --dropdown-bg: rgba(0, 0, 0, 0.9);
+
+    /* Transições aprimoradas */
+    --transition-normal: all 0.3s ease;
+    --transition-slow: all 0.5s ease;
+    --transition-fast: all 0.15s ease;
+    --transition-bounce: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --transition-elastic: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* Adicionando variáveis de espaçamento consistentes */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2.5rem;
+    --border-radius-sm: 0.25rem;
+    --border-radius-md: 0.5rem;
+    --border-radius-lg: 0.75rem;
+    --border-radius-xl: 1rem;
+    --border-radius-circle: 50%;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Estilos base */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    padding-top: 76px;
+    min-height: 100vh;
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Navbar customizada */
+.navbar {
+    background: rgba(3, 10, 140, 0.9);
+    backdrop-filter: blur(10px);
+    transition: var(--transition-normal);
+}
+
+.navbar.scrolled {
+    background: rgba(3, 10, 140, 0.98);
+}
+
+/* Seção do Perfil */
+.profile-section {
+    margin-top: 2rem;
+}
+
+/* Card da Foto do Perfil */
+.profile-photo-card {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-normal);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-photo-card:hover {
+    background-color: var(--card-hover-bg);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-5px);
+}
+
+/* Balão de fala do avatar */
+.avatar-speech-bubble {
+    position: absolute;
+    top: -80px; /* Afastado mais para cima, fora da imagem */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    color: var(--primary-color);
+    padding: 10px 15px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    opacity: 0;
+    visibility: hidden;
+    box-shadow: var(--shadow-md);
+    min-width: 150px;
+    max-width: 220px;
+    text-align: center;
+    transition: var(--transition-bounce);
+    z-index: 100;
+    width: auto; /* Permite que o balão cresça com base no conteúdo */
+}
+
+.avatar-speech-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 10px 10px 0;
+    border-style: solid;
+    border-color: white transparent transparent;
+}
+
+.avatar-speech-bubble.show {
+    opacity: 1;
+    visibility: visible;
+    animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Variações de mensagens (serão selecionadas aleatoriamente via JavaScript) */
+.avatar-speech-bubble.message-1::before {
+    content: "Obrigado por me escolher!";
+}
+
+.avatar-speech-bubble.message-2::before {
+    content: "Vamos formar uma ótima equipe!";
+}
+
+.avatar-speech-bubble.message-3::before {
+    content: "Estou feliz por representar você!";
+}
+
+.avatar-speech-bubble.message-4::before {
+    content: "Agora sim estou no lugar certo!";
+}
+
+.avatar-speech-bubble.message-5::before {
+    content: "Você tem bom gosto!";
+}
+
+.avatar-speech-bubble.message-6::before {
+    content: "Pronto para trabalhar com você!";
+}
+
+.avatar-speech-bubble.message-7::before {
+    content: "Que bom te conhecer!";
+}
+
+.avatar-speech-bubble.message-8::before {
+    content: "Somos a dupla perfeita!";
+}
+
+.avatar-speech-bubble.message-9::before {
+    content: "Sucesso garantido com essa escolha!";
+}
+
+.avatar-speech-bubble.message-10::before {
+    content: "Vamos arrasar juntos!";
+}
+
+.avatar-speech-bubble.message-11::before {
+    content: "Estava esperando por você!";
+}
+
+.avatar-speech-bubble.message-12::before {
+    content: "Excelente escolha!";
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) scale(0.3);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateX(-50%) scale(1.1);
+    }
+
+    70% {
+        transform: translateX(-50%) scale(0.9);
+    }
+    100% {
+        transform: translateX(-50%) scale(1);
+    }
+}
+
+.current-avatar {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    border-radius: var(--border-radius-circle);
+    overflow: hidden;
+    border: 4px solid var(--accent-color);
+    position: relative;
+    box-shadow: var(--shadow-md);
+}
+
+.profile-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition-bounce);
+}
+
+.profile-avatar:hover {
+    transform: scale(1.1);
+}
+
+/* Ajuste nas cores de texto explicativo */
+.profile-photo-card .text-muted {
+    color: white !important; /* Força a cor branca sobrescrevendo o padrão de text-muted */
+    opacity: 0.9; /* Leve transparência para melhor contraste */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); /* Adiciona sombra sutil para melhor legibilidade */
+}
+
+/* Efeito hover para textos explicativos */
+.profile-photo-card .text-muted:hover {
+    opacity: 1;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Card de Informações do Perfil */
+.profile-info-card {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-normal);
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-info-card:hover {
+    background-color: var(--card-hover-bg);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-5px);
+}
+
+.profile-info-card h2 {
+    color: var(--text-color);
+    font-weight: 600;
+    margin-bottom: var(--spacing-md);
+    position: relative;
+    padding-bottom: var(--spacing-xs);
+    display: flex;
+    align-items: center;
+}
+
+.profile-info-card h2::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 50px;
+    height: 4px;
+    background: var(--gradient-primary);
+    border-radius: 2px;
+}
+
+.profile-info-card h2 i {
+    margin-right: 0.5rem;
+}
+
+/* Formulário */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    font-weight: var(--font-weight-medium);
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.form-label i {
+    margin-right: 0.5rem;
+}
+
+.form-control,
+.form-select {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Estilos de Input e Form */
+.form-control {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-color);
+    transition: var(--transition-normal);
+}
+
+.form-control:focus {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: var(--accent-color);
+    color: var(--text-color);
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Botões */
+.btn-primary {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    transition: var(--transition-normal);
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+/* Botões e elementos interativos */
+.btn-primary {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.btn-success {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    border-color: var (--danger-color);
+}
+
+.btn-warning {
+    background-color: var(--warning-color);
+    border-color: var(--warning-color);
+}
+
+.btn-info {
+    background-color: var(--info-color);
+    border-color: var(--info-color);
+}
+
+/* Estados ativos e foco */
+.nav-link.active {
+    color: var(--accent-color) !important;
+}
+
+.form-control:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Badges e indicadores */
+.badge-primary {
+    background-color: var(--accent-color);
+    transition: all 0.3s ease;
+    padding: 0.5rem 0.75rem;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.badge-success {
+    background-color: var (--success-color);
+    transition: all 0.3s ease;
+    padding: 0.5rem 0.75rem;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.badge-danger {
+    background-color: var(--danger-color);
+    transition: all 0.3s ease;
+    padding: 0.5rem 0.75rem;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.badge-warning {
+    background-color: var(--warning-color);
+    transition: all 0.3s ease;
+    padding: 0.5rem 0.75rem;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.badge-info {
+    background-color: var(--info-color);
+    transition: all 0.3s ease;
+    padding: 0.5rem 0.75rem;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Animações de Hover */
+.hover\:scale-105:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.hover\:text-accent:hover {
+    color: var(--accent-color);
+    text-shadow: 0 0 8px rgba(13, 110, 253, 0.3);
+    transition: all 0.3s ease;
+}
+
+/* Transições */
+.transition-all {
+    transition: var(--transition-normal);
+}
+
+.transition-transform {
+    transition: transform var(--transition-normal);
+}
+
+.transition-colors {
+    transition: color var(--transition-normal), background-color var(--transition-normal);
+}
+
+/* Efeitos de Loading */
+.opacity-0 {
+    opacity: 0;
+}
+
+.duration-1000 {
+    transition-duration: 1000ms;
+}
+
+/* Cards e Containers */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-md);
+}
+
+.row {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 1.5rem;
+}
+
+/* Modal de Avatar */
+.avatar-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: 1rem;
+}
+
+.avatar-item {
+    cursor: pointer;
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.avatar-item img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.avatar-item:hover img {
+    transform: scale(1.1);
+}
+
+.avatar-item.selected {
+    border: 3px solid var(--primary-color);
+}
+
+.avatar-item.selected::after {
+    content: '\F26B';
+    font-family: "Bootstrap Icons";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--primary-color);
+    font-size: 2rem;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+/* Avatar no Header */
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Modal de Avatar - Preview Card */
+.preview-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    text-align: center;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto var(--spacing-lg);
+    padding: var(--spacing-lg);
+}
+
+.current-selection {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid var(--accent-color);
+    box-shadow: var(--shadow-md);
+}
+
+.current-selection img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition-bounce);
+}
+
+/* Grid de Seleção de Avatar */
+.avatar-selection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    width: 100%;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 12px;
+    padding: var(--spacing-md);
+    justify-content: center;
+}
+
+.avatar-item {
+    position: relative;
+    cursor: pointer;
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    aspect-ratio: 1;
+    transition: var(--transition-normal);
+    border: 2px solid transparent;
+}
+
+.avatar-item:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.avatar-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition-normal);
+}
+
+.avatar-item.selected {
+    border-color: var(--accent-color);
+}
+
+.avatar-item.selected::after {
+    content: "\F26B";
+    font-family: "Bootstrap Icons";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--accent-color);
+    font-size: 2rem;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Abas do Modal */
+.nav-tabs {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-tabs .nav-link {
+    color: var(--text-color);
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    transition: var(--transition-normal);
+}
+
+.nav-tabs .nav-link:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: transparent;
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--accent-color);
+    background: rgba(13, 110, 253, 0.1);
+    border-bottom: 2px solid var(--accent-color);
+}
+
+/* Estatísticas do Usuário */
+.stat-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-md);
+    display: flex;
+    align-items: center;
+    transition: var(--transition-normal);
+    height: 100%;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    background: var(--card-hover-bg);
+    box-shadow: var(--shadow-md);
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius-circle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: var(--spacing-sm);
+}
+
+.stat-icon i {
+    font-size: 1.5rem;
+    color: var(--accent-color);
+}
+
+.stat-content h4 {
+    font-size: 1.5rem;
+    margin: 0;
+    color: var(--text-color);
+}
+
+.stat-content p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+}
+
+/* Welcome Section */
+.welcome-section {
+    background: var(--card-bg);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-color), var(--info-color));
+}
+
+.welcome-section h1 {
+    font-size: 2rem;
+    margin-bottom: var(--spacing-xs);
+    color: var(--text-color);
+}
+
+.welcome-section .lead {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.1rem;
+    margin-bottom: 0;
+}
+
+/* Botão Outline Light */
+.btn-outline-light {
+    border-color: rgba(255, 255, 255, 0.5);
+    color: var(--text-color);
+}
+
+.btn-outline-light:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var (--text-color);
+}
+
+/* Animação de digitação para o título */
+.typing-text {
+    overflow: hidden;
+    border-right: 0.15em solid var(--accent-color);
+    white-space: nowrap;
+    margin: 0;
+    letter-spacing: 0.05em;
+    animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+}
+
+@keyframes typing {
+    from {
+        width: 0
+    }
+
+    to {
+        width: 100%
+    }
+}
+
+@keyframes blink-caret {
+
+    from,
+    to {
+        border-color: transparent
+    }
+
+    50% {
+        border-color: var(--accent-color)
+    }
+}
+
+/* Efeitos de pulsação para botões importantes */
+.btn-pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Efeitos de flutuação para cards */
+.float-effect {
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .profile-section {
+        margin-top: 1rem;
+    }
+
+    .profile-photo-card,
+    .profile-info-card {
+        padding: 1rem;
+    }
+
+    .current-avatar {
+        width: 150px;
+        height: 150px;
+    }
+
+    .avatar-grid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 0.5rem;
+    }
+
+    .avatar-item img {
+        height: 80px;
+    }
+}
+
+/* Modo Escuro */
+@media (prefers-color-scheme: dark) {
+
+    .profile-photo-card,
+    .profile-info-card {
+        background-color: var(--card-background);
+        border-color: var(--border-color);
+    }
+
+    .form-control,
+    .form-select {
+        background-color: var(--card-background);
+        border-color: var(--border-color);
+        color: var(--text-color);
+    }
+
+    .modal-content {
+        background-color: var(--card-background);
+        border-color: var(--border-color);
+    }
+
+    .modal-header,
+    .modal-footer {
+        border-color: var(--border-color);
+    }
+
+    .nav-tabs .nav-link {
+        color: var(--text-color);
+    }
+
+    .nav-tabs .nav-link.active {
+        background-color: var(--card-background);
+        border-color: var(--border-color);
+        color: var(--primary-color);
+    }
+}
+
+/* Modal de Avatar - Estilos Aprimorados */
+.modal-content {
+    background: #1a1e2d;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    color: var(--text-color);
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.modal-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(to right, rgba(3, 10, 140, 0.8), rgba(5, 17, 242, 0.8));
+    padding: 1rem 1.5rem;
+    align-items: center;
+}
+
+.modal-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+    padding: 1rem 1.5rem;
+    justify-content: space-between;
+}
+
+.btn-close {
+    filter: invert(1) brightness(200%);
+}
+
+/* Avatar Preview e Seleção Melhorados */
+.preview-card {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.preview-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+}
+
+.current-selection {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid var(--accent-color);
+    box-shadow: 0 0 20px rgba(13, 110, 253, 0.5);
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    margin-bottom: var(--spacing-md);
+}
+
+.current-selection:hover {
+    transform: scale(1.05);
+    border-color: var(--info-color);
+}
+
+.current-selection img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.current-selection:hover img {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* Grid de Avatares Melhorado */
+.avatar-selection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 15px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 12px;
+    padding: var(--spacing-md);
+    justify-content: center;
+}
+
+.avatar-item {
+    position: relative;
+    cursor: pointer;
+    border-radius: 12px;
+    overflow: hidden;
+    aspect-ratio: 1;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 3px solid transparent;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.avatar-item:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+}
+
+.avatar-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.5s ease;
+}
+
+.avatar-item:hover img {
+    transform: scale(1.15);
+}
+
+.avatar-item.selected {
+    border-color: var(--accent-color);
+    animation: pulse-border 2s infinite;
+}
+
+@keyframes pulse-border {
+    0% {
+        box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(13, 110, 253, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(13, 110, 253, 0);
+    }
+}
+
+.avatar-item.selected::after {
+    content: "\F26B";
+    font-family: "Bootstrap Icons";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 2rem;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+    z-index: 5;
+}
+
+/* Abas do Modal Melhoradas */
+.nav-tabs {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+    padding: 0 15px;
+    margin-bottom: 20px;
+}
+
+.nav-tabs .nav-link {
+    color: rgba(255, 255, 255, 0.7);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px 10px 0 0;
+    transition: all 0.3s ease;
+    margin-right: 5px;
+    font-weight: 500;
+}
+
+.nav-tabs .nav-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.nav-tabs .nav-link.active {
+    color: #fff;
+    background: rgba(13, 110, 253, 0.2);
+    border-bottom: 3px solid var(--accent-color);
+    font-weight: 600;
+}
+
+.nav-tabs .nav-link i {
+    margin-right: 8px;
+    transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link:hover i {
+    transform: scale(1.2);
+}
+
+/* Efeito de carregamento para os avatares */
+.scale-in-center {
+    animation: scale-in-center 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@keyframes scale-in-center {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Novos estilos para as estatísticas e cartões informativos */
+.stats-overview {
+    margin-top: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+.stats-overview h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.stats-overview h3 i {
+    margin-right: 10px;
+    color: var(--accent-color);
+}
+
+.stat-pill {
+    display: inline-block;
+    background: rgba(13, 110, 253, 0.2);
+    color: #fff;
+    border-radius: 20px;
+    padding: 5px 15px;
+    margin: 5px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    margin: 0.25rem;
+}
+
+.stat-pill:hover {
+    background: rgba(13, 110, 253, 0.4);
+    transform: translateY(-3px);
+}
+
+.stat-pill i {
+    margin-right: 5px;
+}
+
+/* Timeline de atividades recentes */
+.timeline {
+    position: relative;
+    padding: 20px 0;
+    margin-top: var(--spacing-md);
+}
+
+.timeline:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 10px;
+    height: 100%;
+    width: 2px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.timeline-item {
+    position: relative;
+    padding-left: 40px;
+    margin-bottom: 25px;
+    margin-bottom: var(--spacing-lg);
+}
+
+.timeline-item:last-child {
+    margin-bottom: 0;
+}
+
+.timeline-item:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    border: 4px solid rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.timeline-item .time {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.8rem;
+    margin-bottom: 5px;
+}
+
+.timeline-item .content {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    padding: var(--spacing-md);
+}
+
+.timeline-item .title {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.timeline-item .description {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+}
+
+/* Tooltip personalizado */
+.custom-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-tooltip .tooltip-text {
+    visibility: hidden;
+    width: 200px;
+    background-color: #000;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 10px;
+    position: absolute;
+    z-index: 1000;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    font-size: 0.9rem;
+}
+
+.custom-tooltip .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #000 transparent transparent transparent;
+}
+
+.custom-tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Botões de ação */
+.d-flex.flex-wrap.justify-content-center.gap-3 {
+    gap: 0.75rem !important;
+}
+
+.btn {
+    padding: 0.5rem 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: var(--border-radius-md);
+}
+
+/* Melhorias na responsividade */
+@media (max-width: 991.98px) {
+    .welcome-section {
+        padding: var(--spacing-md);
+    }
+
+    .welcome-section h1 {
+        font-size: 1.5rem;
+    }
+
+    .welcome-section .lead {
+        font-size: 1rem;
+    }
+
+    .profile-photo-card,
+    .profile-info-card {
+        padding: var(--spacing-md);
+    }
+
+    .current-avatar {
+        width: 150px;
+        height: 150px;
+    }
+
+    .stats-overview {
+        padding: var(--spacing-md);
+    }
+
+    .stat-card {
+        margin-bottom: var(--spacing-sm);
+    }
+}
+
+@media (max-width: 767.98px) {
+    .welcome-section .d-flex {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .welcome-section .btn {
+        margin-top: var(--spacing-sm);
+        align-self: flex-start;
+    }
+
+    .current-avatar {
+        width: 120px;
+        height: 120px;
+    }
+
+    .nav-tabs .nav-link {
+        padding: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .nav-tabs .nav-link i {
+        margin-right: 4px;
+    }
+
+    .avatar-selection-grid {
+        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+        gap: 8px;
+    }
+
+    .avatar-item {
+        border-width: 2px;
+    }
+
+    .timeline-item {
+        padding-left: 30px;
+    }
+
+    .timeline-item:before {
+        width: 16px;
+        height: 16px;
+    }
+
+    .btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .container {
+        padding: var(--spacing-sm);
+    }
+
+    .row {
+        --bs-gutter-x: 0.75rem;
+        --bs-gutter-y: 0.75rem;
+    }
+
+    .welcome-section h1 {
+        font-size: 1.25rem;
+    }
+
+    .profile-photo-card,
+    .profile-info-card {
+        padding: var(--spacing-sm);
+    }
+
+    .current-avatar {
+        width: 100px;
+        height: 100px;
+    }
+
+    .profile-avatar {
+        border-width: 2px;
+    }
+
+    .form-group {
+        margin-bottom: 0.75rem;
+    }
+
+    .form-label {
+        font-size: 0.875rem;
+    }
+
+    .form-control,
+    .form-select {
+        padding: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .preview-card {
+        padding: var(--spacing-sm);
+    }
+
+    .current-selection {
+        width: 120px;
+        height: 120px;
+    }
+
+    .modal-body {
+        padding: var(--spacing-sm);
+    }
+
+    .avatar-selection-grid {
+        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+        gap: 6px;
+    }
+
+    .timeline:before {
+        left: 8px;
+    }
+
+    .timeline-item {
+        padding-left: 25px;
+    }
+
+    .timeline-item:before {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+/* Ajustes específicos para o modal de avatar */
+.modal-dialog.modal-lg {
+    max-width: 800px;
+    margin: 1.75rem auto;
+}
+
+.modal-body {
+    padding: var(--spacing-lg);
+    max-height: 70vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-color) rgba(0, 0, 0, 0.2);
+}
+
+.modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background-color: var(--accent-color);
+    border-radius: 10px;
+}
+
+/* Melhorias nas abas e grids de avatar */
+#avatarTabs {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin-bottom: var(--spacing-md);
+}
+
+#avatarTabs::-webkit-scrollbar {
+    display: none;
+}
+
+#avatarTabs .nav-item {
+    flex: 0 0 auto;
+}
+
+.avatar-grid {
+    margin: 0;
+}
+
+.preview-card {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.current-selection {
+    margin-bottom: var(--spacing-md);
+}
+
+/* Botões no modal */
+.modal-footer .btn {
+    min-width: 100px;
+}
+
+/* Ajustes nos formulários para melhor alinhamento */
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+/* Alinhamento das cards informativas */
+.content.p-3.h-100 {
+    display: flex;
+    flex-direction: column;
+}
+
+.content.p-3.h-100 h5 {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.content.p-3.h-100 .d-flex.flex-wrap {
+    margin-top: auto;
+}
+
+/* Modal de Avatar - Ajustes na cor do texto */
+.modal-body .text-muted {
+    color: white !important; /* Força a cor branca sobrescrevendo o padrão de text-muted */
+    opacity: 0.9; /* Leve transparência para melhor contraste */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); /* Adiciona sombra sutil para melhor legibilidade */
+}
+
+/* Ajuste no hover do texto para um efeito sutil */
+.modal-body .text-muted:hover {
+    opacity: 1;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}

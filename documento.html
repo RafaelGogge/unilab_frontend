@@ -1,0 +1,627 @@
+﻿<!-- Código desenvolvido por Rafael V. Gogge -->
+<!-- Direitos reservados Unilab © 2025 -->
+<!-- GitHub: https://github.com/RafaelGogge -->
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Rafael V. Gogge">
+    <meta name="copyright" content="© 2025 Rafael V. Gogge">
+    <title>Tutorial do Sistema</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/documento.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+
+<body>
+    <!-- Botão Voltar -->
+    <a href="index.html" class="back-button">
+        <i class="bi bi-arrow-left"></i>
+        Voltar
+    </a>
+
+    <!-- Botão Menu Mobile -->
+    <button class="menu-toggle" aria-label="Toggle menu">
+        <i class="bi bi-list"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo-container">
+            <img src="imagens/LogoUnilab.png" alt="UniLab Logo">
+        </div>
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="Pesquisar...">
+        </div>
+        <nav class="nav-menu">
+            <!-- Gerado dinamicamente pelo JavaScript -->
+        </nav>
+    </aside>
+
+    <div class="container">
+        <main class="main-content">
+            <h1>Documentação do Sistema - UniLab</h1>
+
+            <section>
+                <h2>1. Página Inicial (Login)</h2>
+                <p>Na página inicial você encontra:</p>
+                <ul>
+                    <li>Campo para inserir email</li>
+                    <li>Campo para inserir senha</li>
+                    <li>Botão para realizar login</li>
+                    <li>Link para cadastro de novo usuário</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>2. Cadastro de Usuário</h2>
+                <p>Na página de cadastro você pode:</p>
+                <ul>
+                    <li>Preencher seus dados pessoais</li>
+                    <li>Criar uma senha</li>
+                    <li>Enviar documentos necessários</li>
+                    <li>Finalizar o cadastro</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>3. Dashboard</h2>
+                <p>No painel principal você tem acesso a:</p>
+                <ul>
+                    <li>Visão geral dos seus dados</li>
+                    <li>Menu de navegação</li>
+                    <li>Área de notificações</li>
+                    <li>Opções de configuração</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>4. Edição de Dados</h2>
+                <p>Na página de edição você pode:</p>
+                <ul>
+                    <li>Atualizar informações pessoais</li>
+                    <li>Modificar senha</li>
+                    <li>Alterar documentos</li>
+                    <li>Salvar alterações</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>5. Login do Administrador</h2>
+                <p>Na página de login do administrador você encontra:</p>
+                <ul>
+                    <li>Campo para inserir usuário administrativo</li>
+                    <li>Campo para inserir senha de administrador</li>
+                    <li>Botão para acessar o painel administrativo</li>
+                    <li>Verificação de credenciais de nível administrativo</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>5.1 Funções Administrativas</h2>
+                <p>Como administrador você pode:</p>
+                <ul>
+                    <li>Gerenciar usuários do sistema</li>
+                    <li>Visualizar logs de acesso</li>
+                    <li>Configurar permissões</li>
+                    <li>Gerenciar documentos e registros</li>
+                    <li>Realizar backup do sistema</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>5.2 Dicas de Segurança para Administradores</h2>
+                <ul>
+                    <li>Nunca compartilhe suas credenciais administrativas</li>
+                    <li>Altere sua senha periodicamente</li>
+                    <li>Verifique os logs de acesso regularmente</li>
+                    <li>Mantenha o registro de todas as alterações importantes</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>6. Página de Boas-Vindas</h2>
+                <p>Na página de boas-vindas você encontra:</p>
+                <ul>
+                    <li>Mensagem personalizada de boas-vindas</li>
+                    <li>Menu principal de navegação</li>
+                    <li>Resumo das últimas atividades</li>
+                    <li>Acesso rápido às principais funcionalidades</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>7. Gerenciamento de Laboratórios (Administrador)</h2>
+                <p>Na página de gerenciamento de laboratórios você pode:</p>
+                <ul>
+                    <li>Cadastrar novos laboratórios</li>
+                    <li>Editar informações dos laboratórios existentes</li>
+                    <li>Visualizar status de ocupação</li>
+                    <li>Definir horários disponíveis</li>
+                    <li>Gerenciar equipamentos</li>
+                    <li>Desativar/ativar laboratórios</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>8. Gerenciamento de Professores (Administrador)</h2>
+                <p>No gerenciamento de professores você pode:</p>
+                <ul>
+                    <li>Cadastrar novos professores</li>
+                    <li>Visualizar lista de professores</li>
+                    <li>Atribuir permissões específicas</li>
+                    <li>Editar dados cadastrais</li>
+                    <li>Vincular professores aos laboratórios</li>
+                    <li>Gerenciar status de atividade</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>9. Histórico de Agendamentos</h2>
+                <p>Na página de histórico você encontra:</p>
+                <ul>
+                    <li>Lista completa de agendamentos realizados</li>
+                    <li>Filtros por data, laboratório e professor</li>
+                    <li>Status dos agendamentos (concluídos/cancelados)</li>
+                    <li>Detalhes de cada agendamento</li>
+                    <li>Opção de exportar relatórios</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>10. Agendamento de Laboratório</h2>
+                <p>No sistema de agendamento você pode:</p>
+                <ul>
+                    <li>Verificar disponibilidade de horários</li>
+                    <li>Selecionar laboratório desejado</li>
+                    <li>Definir data e horário</li>
+                    <li>Especificar finalidade do uso</li>
+                    <li>Listar equipamentos necessários</li>
+                    <li>Confirmar reserva</li>
+                    <li>Receber confirmação por email</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>10.1 Regras de Agendamento</h2>
+                <ul>
+                    <li>Agendamentos devem ser feitos com antecedência mínima</li>
+                    <li>Respeitar horários de funcionamento</li>
+                    <li>Cancelamentos devem ser informados</li>
+                    <li>Seguir normas de uso do laboratório</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>11. Documentação Detalhada JavaScript</h2>
+
+                <section>
+                    <h3>11.1 Arquivos de Login e Autenticação</h3>
+
+                    <h4>telaDeLoginAdministrador.js</h4>
+                    <ul>
+                        <li>Validação de credenciais administrativas</li>
+                        <li>Controle de tentativas de login</li>
+                        <li>Redirecionamento para dashboard</li>
+                        <li>Recuperação de senha</li>
+                    </ul>
+
+                    <h4>telaDeLoginProfessor.js</h4>
+                    <ul>
+                        <li>Autenticação de professores</li>
+                        <li>Verificação de permissões</li>
+                        <li>Gestão de sessão</li>
+                        <li>Sistema de lembrar usuário</li>
+                    </ul>
+
+                    <h4>verificarAcesso.js</h4>
+                    <ul>
+                        <li>Middleware de autenticação</li>
+                        <li>Verificação de tokens</li>
+                        <li>Controle de rotas protegidas</li>
+                        <li>Validação de permissões</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>11.2 Gestão de Laboratórios e Professores</h3>
+
+                    <h4>administradorGerenciarLaboratorios.js</h4>
+                    <ul>
+                        <li>Cadastro de novos laboratórios</li>
+                        <li>Edição de informações</li>
+                        <li>Sistema de busca avançada</li>
+                        <li>Gestão de equipamentos</li>
+                        <li>Controle de manutenção</li>
+                        <li>Relatórios de utilização</li>
+                    </ul>
+
+                    <h4>administradorGerenciarProfessores.js</h4>
+                    <ul>
+                        <li>Gerenciamento de cadastros</li>
+                        <li>Atribuição de permissões</li>
+                        <li>Vinculação com laboratórios</li>
+                        <li>Histórico de atividades</li>
+                        <li>Sistema de avaliação</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>11.3 Sistema de Agendamentos</h3>
+
+                    <h4>agendamento_lab.js</h4>
+                    <ul>
+                        <li>Interface de agendamento</li>
+                        <li>Validação de disponibilidade</li>
+                        <li>Confirmação por email</li>
+                        <li>Gestão de conflitos</li>
+                    </ul>
+
+                    <h4>principalAgendamentodeLaboratorios.js</h4>
+                    <ul>
+                        <li>Dashboard principal</li>
+                        <li>Visualização de calendário</li>
+                        <li>Filtros de busca</li>
+                        <li>Relatórios gerenciais</li>
+                    </ul>
+
+                    <h4>historicoAgendamentos.js</h4>
+                    <ul>
+                        <li>Consulta de agendamentos</li>
+                        <li>Filtros avançados</li>
+                        <li>Exportação de dados</li>
+                        <li>Estatísticas de uso</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>11.4 Recursos Auxiliares</h3>
+
+                    <h4>assistente.js</h4>
+                    <ul>
+                        <li>Chatbot de suporte</li>
+                        <li>FAQ interativo</li>
+                        <li>Tutoriais em tempo real</li>
+                        <li>Sistema de ajuda contextual</li>
+                    </ul>
+
+                    <h4>notificacoesDeAlteracoes.js</h4>
+                    <ul>
+                        <li>Sistema de notificações</li>
+                        <li>Alertas em tempo real</li>
+                        <li>Histórico de mudanças</li>
+                        <li>Configuração de preferências</li>
+                    </ul>
+
+                    <h4>tutoriais.js</h4>
+                    <ul>
+                        <li>Guias interativos</li>
+                        <li>Vídeos explicativos</li>
+                        <li>Documentação interativa</li>
+                        <li>Exemplos práticos</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>11.5 Funcionalidades Principais</h3>
+
+                    <h4>index.js</h4>
+                    <ul>
+                        <li>Inicialização do sistema</li>
+                        <li>Carregamento de módulos</li>
+                        <li>Configurações globais</li>
+                        <li>Gestão de rotas</li>
+                    </ul>
+
+                    <h4>sejaBemVindo.js</h4>
+                    <ul>
+                        <li>Tela de boas-vindas</li>
+                        <li>Personalização de interface</li>
+                        <li>Tour inicial do sistema</li>
+                        <li>Atalhos rápidos</li>
+                    </ul>
+                </section>
+            </section>
+
+            <section>
+                <h2>12. Estrutura das Páginas HTML</h2>
+
+                <section>
+                    <h3>12.1 Páginas de Acesso</h3>
+
+                    <h4>index.html</h4>
+                    <ul>
+                        <li>Página inicial do sistema</li>
+                        <li>Opções de acesso (Administrador/Professor)</li>
+                        <li>Links para tutoriais e informações</li>
+                        <li>Navegação principal responsiva</li>
+                    </ul>
+
+                    <h4>telaDeLoginAdministrador.html</h4>
+                    <ul>
+                        <li>Formulário de login administrativo</li>
+                        <li>Validação em tempo real</li>
+                        <li>Recuperação de senha</li>
+                        <li>Links de ajuda e suporte</li>
+                    </ul>
+
+                    <h4>telaDeLoginProfessor.html</h4>
+                    <ul>
+                        <li>Formulário de login para professores</li>
+                        <li>Sistema de lembrar usuário</li>
+                        <li>Redefinição de senha</li>
+                        <li>Acesso ao suporte</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>12.2 Área Administrativa</h3>
+
+                    <h4>administradorGerenciarLaboratorios.html</h4>
+                    <ul>
+                        <li>Lista de laboratórios cadastrados</li>
+                        <li>Formulário de cadastro/edição</li>
+                        <li>Gestão de equipamentos</li>
+                        <li>Relatórios e estatísticas</li>
+                        <li>Controle de status</li>
+                    </ul>
+
+                    <h4>administradorGerenciarProfessores.html</h4>
+                    <ul>
+                        <li>Cadastro de professores</li>
+                        <li>Gerenciamento de permissões</li>
+                        <li>Vinculação com laboratórios</li>
+                        <li>Histórico de atividades</li>
+                        <li>Sistema de notificações</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>12.3 Sistema de Agendamentos</h3>
+
+                    <h4>agendamento_lab.html</h4>
+                    <ul>
+                        <li>Calendário interativo</li>
+                        <li>Seleção de laboratório</li>
+                        <li>Definição de horários</li>
+                        <li>Confirmação de reserva</li>
+                    </ul>
+
+                    <h4>principalAgendamentoDeLaboratorios.html</h4>
+                    <ul>
+                        <li>Visão geral dos agendamentos</li>
+                        <li>Filtros avançados</li>
+                        <li>Status em tempo real</li>
+                        <li>Ações rápidas</li>
+                    </ul>
+
+                    <h4>historicoAgendamentos.html</h4>
+                    <ul>
+                        <li>Registro completo de agendamentos</li>
+                        <li>Sistema de busca</li>
+                        <li>Exportação de dados</li>
+                        <li>Estatísticas de uso</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>12.4 Páginas de Suporte</h3>
+
+                    <h4>informacoesLogin.html</h4>
+                    <ul>
+                        <li>Instruções de acesso</li>
+                        <li>FAQ de login</li>
+                        <li>Contato do suporte</li>
+                        <li>Dicas de segurança</li>
+                    </ul>
+
+                    <h4>notificacoesDeAlteracoes.html</h4>
+                    <ul>
+                        <li>Central de notificações</li>
+                        <li>Histórico de mudanças</li>
+                        <li>Configurações de alerta</li>
+                        <li>Status do sistema</li>
+                    </ul>
+
+                    <h4>paginaDeErros.html</h4>
+                    <ul>
+                        <li>Mensagens de erro personalizadas</li>
+                        <li>Instruções de resolução</li>
+                        <li>Links úteis</li>
+                        <li>Botão de retorno</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>12.5 Páginas Informativas</h3>
+
+                    <h4>sejaBemVindo.html</h4>
+                    <ul>
+                        <li>Mensagem de boas-vindas</li>
+                        <li>Tour do sistema</li>
+                        <li>Acesso rápido</li>
+                        <li>Notificações importantes</li>
+                    </ul>
+
+                    <h4>sobre.html</h4>
+                    <ul>
+                        <li>Informações do sistema</li>
+                        <li>Equipe responsável</li>
+                        <li>Versão atual</li>
+                        <li>Políticas de uso</li>
+                    </ul>
+
+                    <h4>tutoriais.html</h4>
+                    <ul>
+                        <li>Guias passo a passo</li>
+                        <li>Vídeos explicativos</li>
+                        <li>Documentação interativa</li>
+                        <li>Perguntas frequentes</li>
+                    </ul>
+                </section>
+            </section>
+
+            <section>
+                <h2>13. Estilos CSS</h2>
+
+                <section>
+                    <h3>13.1 Estilos de Páginas de Acesso</h3>
+
+                    <h4>index.css</h4>
+                    <ul>
+                        <li>Layout responsivo da página inicial</li>
+                        <li>Estilos do cabeçalho e navegação</li>
+                        <li>Animações de transição</li>
+                        <li>Design adaptativo para diferentes dispositivos</li>
+                    </ul>
+
+                    <h4>telaDeLoginAdministrador.css e telaDeLoginProfessor.css</h4>
+                    <ul>
+                        <li>Estilos dos formulários de login</li>
+                        <li>Feedback visual de validação</li>
+                        <li>Animações de carregamento</li>
+                        <li>Mensagens de erro personalizadas</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>13.2 Estilos Administrativos</h3>
+
+                    <h4>administradorGerenciarLaboratorios.css</h4>
+                    <ul>
+                        <li>Layout de grade para laboratórios</li>
+                        <li>Estilos de formulários de cadastro</li>
+                        <li>Indicadores visuais de status</li>
+                        <li>Estilos de tabelas e listas</li>
+                        <li>Modais e popups</li>
+                    </ul>
+
+                    <h4>administradorGerenciarProfessores.css</h4>
+                    <ul>
+                        <li>Layout de lista de professores</li>
+                        <li>Estilos de cards de perfil</li>
+                        <li>Indicadores de permissões</li>
+                        <li>Formulários de edição</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>13.3 Estilos de Agendamento</h3>
+
+                    <h4>agendamento_lab.css</h4>
+                    <ul>
+                        <li>Estilos do calendário</li>
+                        <li>Indicadores de disponibilidade</li>
+                        <li>Formulários de reserva</li>
+                        <li>Confirmações visuais</li>
+                    </ul>
+
+                    <h4>principalAgendamentoDeLaboratorios.css</h4>
+                    <ul>
+                        <li>Layout do dashboard</li>
+                        <li>Visualização de agenda</li>
+                        <li>Filtros e controles</li>
+                        <li>Gráficos e estatísticas</li>
+                    </ul>
+
+                    <h4>historicoAgendamentos.css</h4>
+                    <ul>
+                        <li>Tabelas de histórico</li>
+                        <li>Filtros de pesquisa</li>
+                        <li>Paginação</li>
+                        <li>Exportação de dados</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>13.4 Estilos de Suporte</h3>
+
+                    <h4>informacoesLogin.css</h4>
+                    <ul>
+                        <li>Layout informativo</li>
+                        <li>Estilos de FAQ</li>
+                        <li>Links de ajuda</li>
+                        <li>Seções explicativas</li>
+                    </ul>
+
+                    <h4>notificacoesDeAlteracoes.css</h4>
+                    <ul>
+                        <li>Estilos de notificações</li>
+                        <li>Indicadores de status</li>
+                        <li>Animações de alerta</li>
+                        <li>Layout de histórico</li>
+                    </ul>
+
+                    <h4>paginaDeErros.css</h4>
+                    <ul>
+                        <li>Estilos de mensagens de erro</li>
+                        <li>Layout responsivo</li>
+                        <li>Botões de ação</li>
+                        <li>Imagens ilustrativas</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>13.5 Estilos de Páginas Informativas</h3>
+
+                    <h4>sejaBemVindo.css</h4>
+                    <ul>
+                        <li>Layout de boas-vindas</li>
+                        <li>Animações de entrada</li>
+                        <li>Cards informativos</li>
+                        <li>Menu de acesso rápido</li>
+                    </ul>
+
+                    <h4>sobre.css</h4>
+                    <ul>
+                        <li>Layout institucional</li>
+                        <li>Estilos de texto</li>
+                        <li>Seções informativas</li>
+                        <li>Galeria de equipe</li>
+                    </ul>
+
+                    <h4>tutoriais.css</h4>
+                    <ul>
+                        <li>Layout de guias</li>
+                        <li>Estilos de passos</li>
+                        <li>Player de vídeo</li>
+                        <li>Navegação entre tutoriais</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>13.6 Elementos Comuns</h3>
+                    <ul>
+                        <li>Variáveis CSS para cores e fontes</li>
+                        <li>Classes utilitárias</li>
+                        <li>Media queries para responsividade</li>
+                        <li>Animações e transições</li>
+                        <li>Normalização de estilos</li>
+                        <li>Grid system</li>
+                    </ul>
+                </section>
+            </section>
+
+            <section>
+                <h2>Dicas Importantes</h2>
+                <ul>
+                    <li>Mantenha seus dados sempre atualizados</li>
+                    <li>Use uma senha forte</li>
+                    <li>Faça logout ao sair do sistema</li>
+                    <li>Em caso de dúvidas, contate o suporte</li>
+                </ul>
+            </section>
+        </main>
+    </div>
+
+    <!-- Botão Tema -->
+    <button class="theme-toggle" aria-label="Toggle theme">
+        <i class="bi bi-moon"></i>
+    </button>
+
+    <script src="js/documento.js"></script>
+</body>
+
+</html>
