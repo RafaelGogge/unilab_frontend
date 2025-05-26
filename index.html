@@ -44,7 +44,8 @@
       <a class="navbar-brand" href="index.html">
         <img src="imagens/LogoUnilab.png" alt="UniLab Logo" height="40" width="auto" />
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Alternar navegação">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
@@ -126,7 +127,7 @@
         <div class="section-header text-center">
           <h2 class="fade-in">Novidades em breve!</h2>
           <div class="divider"></div>
-          <!--   <p class="lead fade-in">🤖Em breve você poderá conversar através de seu aplicativo Telegram com nosso bot <strong><a href="#" target="_blank">UniChat</a></strong>🤖</p> -->
+          <!-- <p class="lead fade-in">🤖Em breve você poderá conversar através de seu aplicativo Telegram com nosso bot <strong><a href="#" target="_blank">UniChat</a></strong>🤖</p> -->
         </div>
         <img src="imagens/UniChat_Mascote.png" alt="UniChat Mascote" class="unichat-mascot"
           style="max-width: 200px; width: 100%; height: auto; display: block; margin: 0 auto;">
@@ -179,7 +180,7 @@
               <h2 class="text-center mb-4">Escolha seu tipo de acesso</h2>
               <div class="row g-4">
                 <div class="col-md-6">
-                  <a href="telaDeLoginAdministrador.html" class="user-card admin-card">
+                  <a href="telaDeLoginAdministrador.html" class="user-card admin-card" tabindex="0">
                     <div class="card-icon">
                       <i class="bi bi-shield-lock"></i>
                     </div>
@@ -188,7 +189,7 @@
                   </a>
                 </div>
                 <div class="col-md-6">
-                  <a href="telaDeLoginProfessor.html" class="user-card professor-card">
+                  <a href="telaDeLoginProfessor.html" class="user-card professor-card" tabindex="0">
                     <div class="card-icon">
                       <i class="bi bi-person-badge"></i>
                     </div>
@@ -213,42 +214,42 @@
         </div>
         <div class="row g-4 mt-4">
           <div class="col-md-4 feature-item" data-delay="0">
-            <div class="feature-card">
+            <div class="feature-card h-100">
               <i class="bi bi-calendar-check"></i>
               <h3>Agendamento Inteligente</h3>
               <p>Sistema automatizado de agendamento que evita conflitos e otimiza o uso dos laboratórios.</p>
             </div>
           </div>
           <div class="col-md-4 feature-item" data-delay="100">
-            <div class="feature-card">
+            <div class="feature-card h-100">
               <i class="bi bi-bell"></i>
               <h3>Notificações</h3>
               <p>Receba alertas sobre agendamentos, manutenções e atualizações importantes.</p>
             </div>
           </div>
           <div class="col-md-4 feature-item" data-delay="200">
-            <div class="feature-card">
+            <div class="feature-card h-100">
               <i class="bi bi-graph-up"></i>
               <h3>Eficiência Operacional</h3>
               <p>Gere relatórios completos sobre utilização, manutenção e custos dos laboratórios.</p>
             </div>
           </div>
           <div class="col-md-4 feature-item" data-delay="300">
-            <div class="feature-card">
+            <div class="feature-card h-100">
               <i class="bi bi-gear"></i>
               <h3>Configuração Flexível</h3>
               <p>Adapte o sistema às necessidades específicas da sua instituição de ensino.</p>
             </div>
           </div>
           <div class="col-md-4 feature-item" data-delay="400">
-            <div class="feature-card">
+            <div class="feature-card h-100">
               <i class="bi bi-people"></i>
               <h3>Gestão de Usuários</h3>
               <p>Controle de acesso por perfil, garantindo segurança e rastreabilidade das ações.</p>
             </div>
           </div>
           <div class="col-md-4 feature-item" data-delay="500">
-            <div class="feature-card">
+            <div class="feature-card h-100">
               <i class="bi bi-tools"></i>
               <h3>Controle de Manutenção</h3>
               <p>Acompanhe o histórico de manutenções e programe intervenções preventivas.</p>
@@ -425,13 +426,13 @@
   </footer>
 
   <!-- Chatbot Assistente -->
-  <div class="chat-icon">
+  <div class="chat-icon" tabindex="0" aria-label="Abrir assistente UniLab">
     <i class="bi bi-robot"></i>
   </div>
-  <div class="chat-panel">
+  <div class="chat-panel" aria-live="polite">
     <div class="chat-header">
       <h5 class="mb-0"><i class="bi bi-robot"></i> Assistente UniLab</h5>
-      <button class="chat-close">
+      <button class="chat-close" aria-label="Fechar assistente">
         <i class="bi bi-x"></i>
       </button>
     </div>
@@ -446,10 +447,10 @@
         <!-- Botões de opções por tópico serão inseridos aqui via JavaScript -->
       </div>
       <div class="navigation-buttons">
-        <button id="back-button" class="btn btn-sm">
+        <button id="back-button" class="btn btn-sm" type="button">
           <i class="bi bi-arrow-left"></i> Voltar
         </button>
-        <button id="home-button" class="btn btn-sm">
+        <button id="home-button" class="btn btn-sm" type="button">
           <i class="bi bi-house"></i> Menu Principal
         </button>
       </div>
