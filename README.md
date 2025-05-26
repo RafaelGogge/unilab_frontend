@@ -11,7 +11,7 @@
 <div align="center">
   <br>
   <strong>
-    👉 <a href="#" target="_blank">https://unilab-frontend.vercel.app/documento.html</a> 👈
+    👉 <a href="https://unilab-frontend.vercel.app" target="_blank">https://unilab-frontend.vercel.app</a> 👈
     <p>Copie o link e cole no navegador caso o redirecionamento não funcione</p>
   </strong>
   <br>
