@@ -9,15 +9,12 @@
 ## 🚩 **Acesse o UniLab Online!** 🚀
 
 <div align="center">
-
-  <a href="unilab-frontend.vercel.app" target="_blank">
-    <img src="[https://img.shields.io/badge/ACESSAR%20SISTEMA%20UNILAB-00C853?style=for-the-badge&logo=google-chrome&logoColor=white](https://unilab-frontend.vercel.app/documento.html)" alt="Acessar UniLab"/>
-  </a>
-  <br><br>
+  <br>
   <strong>
-    👉 <a href="unilab-frontend.vercel.app" target="_blank">https://unilab-frontend.vercel.app/documento.html</a> 👈
+    👉 <a href="#" target="_blank">https://unilab-frontend.vercel.app/documento.html</a> 👈
+    <p>Copie o link e cole no navegador caso o redirecionamento não funcione</p>
   </strong>
-  <br><br>
+  <br>
   <img src="https://img.icons8.com/color/96/000000/rocket--v2.png" width="60" alt="Rocket"/>
 </div>
 
