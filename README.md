@@ -12,8 +12,7 @@
   <br>
   <strong>
     👉 <a href="https://unilab-frontend.vercel.app" target="_blank">https://unilab-frontend.vercel.app</a> 👈
-    <br>
-    <p>Copie o link e cole no navegador caso o redirecionamento não funcione</p>
+       <br><br><p>Copie o link e cole no navegador caso o redirecionamento não funcione</p>
   </strong>
   <br>
   <img src="https://img.icons8.com/color/96/000000/rocket--v2.png" width="60" alt="Rocket"/>
