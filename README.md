@@ -10,12 +10,12 @@
 
 <div align="center">
 
-  <a href="https://unilab-deploy-url.com" target="_blank">
+  <a href="unilab-frontend.vercel.app" target="_blank">
     <img src="https://img.shields.io/badge/ACESSAR%20SISTEMA%20UNILAB-00C853?style=for-the-badge&logo=google-chrome&logoColor=white" alt="Acessar UniLab"/>
   </a>
   <br><br>
   <strong>
-    👉 <a href="https://unilab-deploy-url.com" target="_blank">Clique aqui para acessar o sistema UniLab!</a> 👈
+    👉 <a href="unilab-frontend.vercel.app" target="_blank">Clique aqui para acessar o sistema UniLab!</a> 👈
   </strong>
   <br><br>
   <img src="https://img.icons8.com/color/96/000000/rocket--v2.png" width="60" alt="Rocket"/>
@@ -115,9 +115,7 @@ Facilitar e otimizar o processo de agendamento de laboratórios, proporcionando 
 
 ## 📚 Links Úteis
 
-- [📖 Documentação do Projeto](#) <!-- Substitua pelo link real se houver -->
-- [🎨 Protótipo no Figma](#) <!-- Substitua pelo link real se houver -->
-- [🗂️ Quadro no Trello](#) <!-- Substitua pelo link real se houver -->
-- [🌐 UniLab Deploy (Acesse aqui)](https://unilab-deploy-url.com) <!-- Substitua pela URL real do deploy -->
+- [📖 Documentação do Projeto](https://unilab-frontend.vercel.app/documento.html) <!-- Substitua pelo link real se houver -->
+- [🌐 UniLab Deploy (Acesse aqui)]([https://unilab-deploy-url.com](https://unilab-frontend.vercel.app) <!-- Substitua pela URL real do deploy -->
 
 ---
