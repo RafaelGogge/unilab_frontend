@@ -4,7 +4,6 @@
     Projeto: UniLab - Sistema de Gerenciamento de Laboratórios
 */
 
-// IIFE para proteção contra inspeção
 (function () {
     const k = ["keydown", "ctrlKey", "shiftKey", "metaKey", "key", "toLowerCase", "preventDefault"];
     const b = ["f12", "u", "i", "j", "c", "r", "p", "s"];

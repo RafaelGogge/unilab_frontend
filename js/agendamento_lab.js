@@ -170,7 +170,7 @@ function inicializarDadosExemplo() {
 // Carrega os dados do laboratório a partir do localStorage
 function carregarDados() {
     console.log('Iniciando carregamento de dados...');
-    
+
     try {
         laboratorios = JSON.parse(localStorage.getItem(STORAGE_KEYS.LABORATORIOS)) || [];
 
@@ -191,93 +191,175 @@ function carregarDados() {
 
 // Função para mostrar o overlay de seleção de laboratório
 function showLabSelectionOverlay() {
-    const overlay = document.getElementById('labSelectionOverlay');
-
-    // Resetar o grid de laboratórios
-    const labGrid = document.getElementById('labSelectionGrid');
-    labGrid.innerHTML = '';
-
-    // Carregar laboratórios do localStorage
-    laboratorios = JSON.parse(localStorage.getItem(STORAGE_KEYS.LABORATORIOS)) || [];
-
-    if (laboratorios.length === 0) {
-        labGrid.innerHTML = '<p class="text-center text-white">Nenhum laboratório encontrado.</p>';
-        return;
-    }
-
-    // Criar card para cada laboratório
-    laboratorios.forEach((lab, index) => {
-        // Verificar status do laboratório
-        const agendamentosLab = JSON.parse(localStorage.getItem(STORAGE_KEYS.LAB_AGENDAMENTOS(lab.id))) || [];
-        const hoje = new Date().toISOString().split('T')[0];
-        const agendamentosHoje = agendamentosLab.filter(a => a.data === hoje);
-
-        let statusClass = 'disponivel';
-        let statusText = 'Disponível';
-
-        if (agendamentosHoje.length > 0) {
-            if (agendamentosHoje.some(a => a.horario === "19:00 às 20:20 e 20:50 às 22:00")) {
-                statusClass = 'ocupado';
-                statusText = 'Ocupado Hoje';
-            } else {
-                statusClass = 'parcial';
-                statusText = 'Parcialmente Disponível';
-            }
+    try {
+        const overlay = document.getElementById('labSelectionOverlay');
+        if (!overlay) {
+            console.error("Elemento 'labSelectionOverlay' não encontrado");
+            return;
         }
 
-        // Criar card
-        const card = document.createElement('div');
-        card.className = 'lab-card';
-        card.tabIndex = 0; // Para acessibilidade
-        card.style.animationDelay = `${index * 0.1}s`;
-        card.innerHTML = `
-        <div class="lab-card-icon">
-            <i class="bi ${getLabIcon(lab.tipo)}"></i>
-        </div>
-        <h3>${lab.nome}</h3>
-        <p>${lab.localizacao}</p>
-        <span class="lab-card-status ${statusClass}">
-            <i class="bi ${statusClass === 'disponivel' ? 'bi-check-circle' : statusClass === 'parcial' ? 'bi-exclamation-circle' : 'bi-x-circle'}"></i>
-            ${statusText}
-        </span>
-    `;
+        // Esconder o conteúdo principal
+        const mainContent = document.getElementById('main-content');
+        if (mainContent) {
+            mainContent.classList.add('opacity-0');
+        }
 
-        // Adicionar evento de clique
-        card.addEventListener('click', () => {
-            selecionarLaboratorio(lab.id);
-            hideLabSelectionOverlay();
-        });
+        // Resetar o grid de laboratórios
+        const labGrid = document.getElementById('labSelectionGrid');
+        if (!labGrid) {
+            console.error("Elemento 'labSelectionGrid' não encontrado");
+            return;
+        }
 
-        // Adicionar evento de teclado para acessibilidade
-        card.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                selecionarLaboratorio(lab.id);
-                hideLabSelectionOverlay();
+        labGrid.innerHTML = '';
+
+        // Carregar laboratórios do localStorage
+        laboratorios = JSON.parse(localStorage.getItem(STORAGE_KEYS.LABORATORIOS)) || [];
+
+        if (laboratorios.length === 0) {
+            labGrid.innerHTML = '<p class="text-center text-white">Nenhum laboratório encontrado.</p>';
+            return;
+        }
+
+        // Criar card para cada laboratório
+        laboratorios.forEach((lab, index) => {
+            // Verificar status do laboratório
+            const agendamentosLab = JSON.parse(localStorage.getItem(STORAGE_KEYS.LAB_AGENDAMENTOS(lab.id))) || [];
+            const hoje = new Date().toISOString().split('T')[0];
+            const agendamentosHoje = agendamentosLab.filter(a => a.data === hoje);
+
+            let statusClass = 'disponivel';
+            let statusText = 'Disponível';
+
+            if (agendamentosHoje.length > 0) {
+                if (agendamentosHoje.some(a => a.horario === "19:00 às 20:20 e 20:50 às 22:00")) {
+                    statusClass = 'ocupado';
+                    statusText = 'Ocupado Hoje';
+                } else {
+                    statusClass = 'parcial';
+                    statusText = 'Parcialmente Disponível';
+                }
             }
+
+            // Criar card
+            const card = document.createElement('div');
+            card.className = 'lab-card';
+            card.tabIndex = 0; // Para acessibilidade
+            card.style.animationDelay = `${index * 0.1}s`;
+            card.innerHTML = `
+            <div class="lab-card-icon">
+                <i class="bi ${getLabIcon(lab.tipo)}"></i>
+            </div>
+            <h3>${lab.nome}</h3>
+            <p>${lab.localizacao}</p>
+            <span class="lab-card-status ${statusClass}">
+                <i class="bi ${statusClass === 'disponivel' ? 'bi-check-circle' : statusClass === 'parcial' ? 'bi-exclamation-circle' : 'bi-x-circle'}"></i>
+                ${statusText}
+            </span>
+        `;
+
+            // Adicionar evento de clique
+            card.addEventListener('click', () => {
+                console.log(`Laboratório clicado: ${lab.nome} (ID: ${lab.id})`);
+                selecionarLaboratorio(lab.id);
+                // Não chame hideLabSelectionOverlay() aqui, agora é chamado dentro de selecionarLaboratorio
+            });
+
+            // Adicionar evento de teclado para acessibilidade
+            card.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    selecionarLaboratorio(lab.id);
+                    hideLabSelectionOverlay();
+                }
+            });
+
+            labGrid.appendChild(card);
         });
 
-        labGrid.appendChild(card);
-    });
+        // Mostrar overlay com animação
+        overlay.style.display = 'flex';
+        setTimeout(() => {
+            overlay.classList.remove('opacity-0', 'translate-y-10');
+        }, 10);
+    } catch (error) {
+        console.error("Erro ao mostrar overlay de seleção:", error);
+    }
+}
 
-    // Mostrar overlay com animação
-    overlay.style.display = 'flex';
-    setTimeout(() => {
-        overlay.classList.remove('opacity-0', 'translate-y-10');
-    }, 10);
+// Função para selecionar um laboratório
+function selecionarLaboratorio(labId) {
+    console.log(`Selecionando laboratório ${labId}...`);
+    window.labAtual = labId;
+
+    try {
+        // Converter IDs para garantir consistência de tipos na comparação
+        const idNumerico = Number(labId);
+        labGlobal = laboratorios.find(lab => Number(lab.id) === idNumerico);
+
+        if (!labGlobal) {
+            console.error(`Laboratório com ID ${labId} não encontrado`);
+            mostrarMensagem('Erro ao carregar laboratório.', 'danger');
+            return;
+        }
+
+        console.log(`Laboratório encontrado: ${labGlobal.nome}`);
+
+        // Carregar agendamentos do laboratório
+        agendamentos = JSON.parse(localStorage.getItem(STORAGE_KEYS.LAB_AGENDAMENTOS(labId))) || [];
+        console.log(`Agendamentos carregados: ${agendamentos.length}`);
+
+        // Atualizar informações do laboratório
+        atualizarInformacoesLaboratorio(labGlobal);
+
+        // Carregar professores
+        carregarProfessores();
+
+        // Atualizar status
+        atualizarStatus();
+
+        // Carregar ferramentas
+        carregarFerramentasLaboratorio(labId);
+
+        // Animar elementos
+        animateElements();
+
+        // Garantir que o overlay seja escondido e o conteúdo principal seja exibido
+        hideLabSelectionOverlay();
+
+    } catch (error) {
+        console.error("Erro ao selecionar laboratório:", error);
+        mostrarMensagem("Erro ao carregar dados do laboratório selecionado.", "danger");
+    }
 }
 
 // Função para esconder o overlay de seleção de laboratório
 function hideLabSelectionOverlay() {
-    const overlay = document.getElementById('labSelectionOverlay');
-    overlay.classList.add('opacity-0', 'translate-y-10');
+    try {
+        const overlay = document.getElementById('labSelectionOverlay');
+        if (!overlay) {
+            console.error("Elemento 'labSelectionOverlay' não encontrado");
+            return;
+        }
 
-    setTimeout(() => {
-        overlay.style.display = 'none';
-    }, 500);
+        overlay.classList.add('opacity-0', 'translate-y-10');
 
-    // Mostrar o conteúdo principal
-    document.getElementById('main-content').classList.remove('opacity-0');
+        // Mostrar o conteúdo principal imediatamente
+        const mainContent = document.getElementById('main-content');
+        if (mainContent) {
+            console.log("Exibindo conteúdo principal");
+            mainContent.classList.remove('opacity-0');
+            mainContent.style.display = 'block'; // Garantir que esteja visível
+        } else {
+            console.error("Elemento 'main-content' não encontrado");
+        }
+
+        setTimeout(() => {
+            overlay.style.display = 'none';
+        }, 500);
+    } catch (error) {
+        console.error("Erro ao esconder overlay:", error);
+    }
 }
 
 // Função para obter o ícone correto para cada tipo de laboratório
@@ -822,7 +904,7 @@ async function cancelarAgendamentosSelecionados() {
         if (senhaInput === null) {
             return; // Usuário cancelou
         }
-        
+
         if (senhaInput !== senhaAdministrador) {
             mostrarMensagem("Senha incorreta. Não foi possível cancelar os agendamentos.", "danger");
             return;
@@ -850,7 +932,7 @@ async function cancelarAgendamentosSelecionados() {
         if (!salvarAgendamentos()) {
             return; // Não continua se falhar ao salvar
         }
-        
+
         mostrarMensagem("Agendamentos selecionados foram cancelados com sucesso.", "success");
 
         const modal = bootstrap.Modal.getInstance(document.getElementById("cancelModal"));
@@ -1156,7 +1238,7 @@ async function cancelarAgendamentosSelecionados() {
         if (senhaInput === null) {
             return; // Usuário cancelou
         }
-        
+
         if (senhaInput !== senhaAdministrador) {
             mostrarMensagem("Senha incorreta. Não foi possível cancelar os agendamentos.", "danger");
             return;
@@ -1184,7 +1266,7 @@ async function cancelarAgendamentosSelecionados() {
         if (!salvarAgendamentos()) {
             return; // Não continua se falhar ao salvar
         }
-        
+
         mostrarMensagem("Agendamentos selecionados foram cancelados com sucesso.", "success");
 
         const modal = bootstrap.Modal.getInstance(document.getElementById("cancelModal"));

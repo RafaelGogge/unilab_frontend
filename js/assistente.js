@@ -5,7 +5,6 @@
 */
 
 (function () {
-  // Implementação segura do bloqueio de teclas do desenvolvedor
   try {
     document.addEventListener("keydown", function (e) {
       const ctrl = e.ctrlKey, shift = e.shiftKey, meta = e.metaKey;
