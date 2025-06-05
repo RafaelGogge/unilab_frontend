@@ -4,105 +4,141 @@
     Projeto: UniLab - Sistema de Gerenciamento de Laboratórios
 */
 
-(function(){
-  const k=["keydown","ctrlKey","shiftKey","metaKey","key","toLowerCase","preventDefault"];
-  const b=["f12","u","i","j","c","r","p","s"];
-  document.addEventListener(k[0],function(e){
-    const ctrl=e[k[1]], shift=e[k[2]], meta=e[k[3]], key=e[k[4]].toLowerCase();
-    if (
-      e[k[4]].toLowerCase()===b[0] ||
-      (ctrl && b.includes(key)) ||
-      (ctrl && shift && b.includes(key)) ||
-      (meta && shift && b.includes(key))
-    ) {
-      e[k[6]]();
-    }
-  });
-document.addEventListener("DOMContentLoaded", () => {
-    // Seleção de elementos do DOM
-    const loginForm = document.getElementById("loginForm")
-    const usernameInput = document.getElementById("username")
-    const passwordInput = document.getElementById("password")
-    const rememberMeCheckbox = document.getElementById("rememberMe")
-    const passwordToggle = document.querySelector(".password-toggle")
-    const feedback = document.getElementById("feedback")
-    const recoveryForm = document.getElementById("recoveryForm")
-    const recoveryEmail = document.getElementById("recoveryEmail")
-    const sendRecoveryBtn = document.getElementById("sendRecovery")
-    const loginBtn = document.querySelector(".btn-login")
+(function () {
+    // Tratamento seguro para bloquear teclas de desenvolvedor
+    try {
+        document.addEventListener("keydown", function (e) {
+            const ctrl = e.ctrlKey, shift = e.shiftKey, meta = e.metaKey;
+            const key = e.key.toLowerCase();
+            const blockedKeys = ["f12", "u", "i", "j", "c", "r", "p", "s"];
 
-    // Estado do formulário
-    let isSubmitting = false
-
-    // Função para mostrar feedback
-    function showFeedback(message, type = "success") {
-        feedback.className = `alert alert-${type} alert-dismissible fade show`
-        feedback.innerHTML = `
-              ${message}
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          `
-        feedback.style.display = "block"
-
-        // Adicionar animação de entrada
-        feedback.style.animation = "none"
-        feedback.offsetHeight // Trigger reflow
-        feedback.style.animation = "alertAppear 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)"
-
-        // Remover alerta após 5 segundos
-        setTimeout(() => {
-            feedback.style.animation = "fadeOut 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards"
-            setTimeout(() => {
-                feedback.style.display = "none"
-            }, 500)
-        }, 5000)
+            if (
+                key === "f12" ||
+                (ctrl && blockedKeys.includes(key)) ||
+                (ctrl && shift && blockedKeys.includes(key)) ||
+                (meta && shift && blockedKeys.includes(key))
+            ) {
+                e.preventDefault();
+            }
+        });
+    } catch (error) {
+        console.error("Erro na inicialização da proteção:", error);
     }
 
-    // Função para validar formulário com animações
-    function validateForm() {
-        let isValid = true
-
-        // Validar usuário
-        if (!usernameInput.value.trim()) {
-            usernameInput.classList.add("is-invalid")
-            animateShake(usernameInput.parentElement)
-            isValid = false
-        } else {
-            usernameInput.classList.remove("is-invalid")
-            usernameInput.classList.add("is-valid")
+    document.addEventListener("DOMContentLoaded", () => {
+        // Verificar se o Bootstrap está disponível
+        if (typeof bootstrap === 'undefined' && typeof window.bootstrap === 'undefined') {
+            console.warn("Bootstrap não encontrado. Algumas funcionalidades podem não funcionar corretamente.");
         }
 
-        // Validar senha
-        if (!passwordInput.value) {
-            passwordInput.classList.add("is-invalid")
-            animateShake(passwordInput.parentElement)
-            isValid = false
-        } else {
-            passwordInput.classList.remove("is-invalid")
-            passwordInput.classList.add("is-valid")
+        // Referência segura ao Bootstrap
+        const bootstrapRef = window.bootstrap || bootstrap || {};
+
+        // Seleção de elementos do DOM com verificação de existência
+        const loginForm = document.getElementById("loginForm");
+        const usernameInput = document.getElementById("username");
+        const passwordInput = document.getElementById("password");
+        const rememberMeCheckbox = document.getElementById("rememberMe");
+        const passwordToggle = document.querySelector(".password-toggle");
+        const feedback = document.getElementById("feedback");
+        const recoveryForm = document.getElementById("recoveryForm");
+        const recoveryEmail = document.getElementById("recoveryEmail");
+        const sendRecoveryBtn = document.getElementById("sendRecovery");
+        const loginBtn = document.querySelector(".btn-login");
+
+        // Verificação de elementos críticos
+        if (!loginForm) {
+            console.error("Elemento crítico 'loginForm' não encontrado!");
+            return;
         }
 
-        return isValid
-    }
+        if (!usernameInput || !passwordInput) {
+            console.error("Campos de login não encontrados!");
+            return;
+        }
 
-    // Função para animar elemento com efeito de shake
-    function animateShake(element) {
-        element.style.animation = "none"
-        element.offsetHeight // Trigger reflow
-        element.style.animation = "shake 0.5s cubic-bezier(.36,.07,.19,.97) both"
-        element.addEventListener(
-            "animationend",
-            () => {
-                element.style.animation = ""
-            },
-            { once: true },
-        )
-    }
+        if (!feedback) {
+            console.warn("Elemento 'feedback' não encontrado. Mensagens de feedback não serão exibidas.");
+        }
 
-    // Adicionar animação de shake
-    if (!document.querySelector("#shakeKeyframes")) {
-        const style = document.createElement("style")
-        style.id = "shakeKeyframes"
-        style.textContent = `
+        // Estado do formulário
+        let isSubmitting = false;
+
+        // Função para mostrar feedback com tratamento de erro
+        function showFeedback(message, type = "success") {
+            if (!feedback) return;
+
+            try {
+                feedback.className = `alert alert-${type} alert-dismissible fade show`;
+                feedback.innerHTML = `
+          ${message}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+                feedback.style.display = "block";
+
+                // Adicionar animação de entrada
+                feedback.style.animation = "none";
+                feedback.offsetHeight; // Trigger reflow
+                feedback.style.animation = "alertAppear 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+
+                // Remover alerta após 5 segundos
+                setTimeout(() => {
+                    feedback.style.animation = "fadeOut 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards";
+                    setTimeout(() => {
+                        feedback.style.display = "none";
+                    }, 500);
+                }, 5000);
+            } catch (error) {
+                console.error("Erro ao exibir feedback:", error);
+            }
+        }
+
+        // Função para validar formulário com animações
+        function validateForm() {
+            let isValid = true
+
+            // Validar usuário
+            if (!usernameInput.value.trim()) {
+                usernameInput.classList.add("is-invalid")
+                animateShake(usernameInput.parentElement)
+                isValid = false
+            } else {
+                usernameInput.classList.remove("is-invalid")
+                usernameInput.classList.add("is-valid")
+            }
+
+            // Validar senha
+            if (!passwordInput.value) {
+                passwordInput.classList.add("is-invalid")
+                animateShake(passwordInput.parentElement)
+                isValid = false
+            } else {
+                passwordInput.classList.remove("is-invalid")
+                passwordInput.classList.add("is-valid")
+            }
+
+            return isValid
+        }
+
+        // Função para animar elemento com efeito de shake
+        function animateShake(element) {
+            element.style.animation = "none"
+            element.offsetHeight // Trigger reflow
+            element.style.animation = "shake 0.5s cubic-bezier(.36,.07,.19,.97) both"
+            element.addEventListener(
+                "animationend",
+                () => {
+                    element.style.animation = ""
+                },
+                { once: true },
+            )
+        }
+
+        // Adicionar animação de shake
+        if (!document.querySelector("#shakeKeyframes")) {
+            const style = document.createElement("style")
+            style.id = "shakeKeyframes"
+            style.textContent = `
               @keyframes shake {
                   10%, 90% { transform: translate3d(-1px, 0, 0); }
                   20%, 80% { transform: translate3d(2px, 0, 0); }
@@ -114,255 +150,291 @@ document.addEventListener("DOMContentLoaded", () => {
                   to { opacity: 0; transform: translateY(-10px); }
               }
           `
-        document.head.appendChild(style)
-    }
-
-    // Função para simular autenticação
-    async function authenticate(username, password) {
-        // Simular delay de rede
-        await new Promise((resolve) => setTimeout(resolve, 1500))
-
-        // Credenciais de teste
-        if (username === "professor" && password === "123456") {
-            // Salvar informações do usuário
-            localStorage.setItem("isAuthenticated", "true")
-            localStorage.setItem("userRole", "professor")
-            localStorage.setItem("userName", username)
-            return { success: true, message: "Login realizado com sucesso!" }
+            document.head.appendChild(style)
         }
 
-        return {
-            success: false,
-            message: "Usuário ou senha incorretos. Tente novamente.",
-        }
-    }
+        // Função para simular autenticação
+        async function authenticate(username, password) {
+            // Simular delay de rede
+            await new Promise((resolve) => setTimeout(resolve, 1500))
 
-    // Função para mostrar estado de loading no botão
-    function setButtonLoading(button, isLoading) {
-        const btnText = button.querySelector(".btn-text")
-        const btnLoader = button.querySelector(".btn-loader")
-
-        if (isLoading) {
-            btnText.classList.add("d-none")
-            btnLoader.classList.remove("d-none")
-            button.disabled = true
-        } else {
-            btnText.classList.remove("d-none")
-            btnLoader.classList.add("d-none")
-            button.disabled = false
-        }
-    }
-
-    // Event Listeners
-
-    // Adicionar efeito de foco nos inputs
-    document.querySelectorAll(".form-control").forEach((input) => {
-        input.addEventListener("focus", () => {
-            input.parentElement.classList.add("input-focus")
-        })
-
-        input.addEventListener("blur", () => {
-            input.parentElement.classList.remove("input-focus")
-        })
-    })
-
-    // Toggle visibilidade da senha com animação
-    passwordToggle.addEventListener("click", () => {
-        const type = passwordInput.getAttribute("type") === "password" ? "text" : "password"
-        passwordInput.setAttribute("type", type)
-
-        const icon = passwordToggle.querySelector("i")
-        icon.style.transform = "translateY(-50%) scale(0)"
-
-        setTimeout(() => {
-            icon.className = type === "password" ? "bi bi-eye" : "bi bi-eye-slash"
-            icon.style.transform = "translateY(-50%) scale(1)"
-        }, 150)
-    })
-
-    // Envio do formulário de login
-    loginForm.addEventListener("submit", async (e) => {
-        e.preventDefault()
-
-        if (!validateForm()) {
-            showFeedback("Por favor, preencha todos os campos obrigatórios.", "danger")
-            return
-        }
-
-        if (isSubmitting) return
-        isSubmitting = true
-
-        // Mostrar estado de loading
-        setButtonLoading(loginBtn, true)
-
-        try {
-            const result = await authenticate(usernameInput.value, passwordInput.value)
-
-            if (result.success) {
-                // Salvar usuário se "Lembrar-me" estiver marcado
-                if (rememberMeCheckbox.checked) {
-                    localStorage.setItem("rememberedUsername", usernameInput.value)
-                } else {
-                    localStorage.removeItem("rememberedUsername")
-                }
-
-                showFeedback(result.message, "success")
-
-                // Animar saída do card
-                document.querySelector(".login-card").style.animation =
-                    "cardExit 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards"
-
-                // Adicionar animação de saída
-                if (!document.querySelector("#exitKeyframes")) {
-                    const style = document.createElement("style")
-                    style.id = "exitKeyframes"
-                    style.textContent = `
-                          @keyframes cardExit {
-                              0% { transform: translateY(0) scale(1); opacity: 1; }
-                              100% { transform: translateY(-30px) scale(0.9); opacity: 0; }
-                          }
-                      `
-                    document.head.appendChild(style)
-                }
-
-                // Redirecionar após 1.5 segundos
-                setTimeout(() => {
-                    window.location.href = "sejaBemVindo.html"
-                }, 1500)
-            } else {
-                showFeedback(result.message, "danger")
-                setButtonLoading(loginBtn, false)
+            // Credenciais de teste
+            if (username === "professor" && password === "password") {
+                // Salvar informações do usuário
+                localStorage.setItem("isAuthenticated", "true")
+                localStorage.setItem("userRole", "professor")
+                localStorage.setItem("userName", username)
+                return { success: true, message: "Login realizado com sucesso!" }
             }
-        } catch (error) {
-            showFeedback("Ocorreu um erro ao tentar fazer login. Tente novamente.", "danger")
-            setButtonLoading(loginBtn, false)
-        } finally {
-            isSubmitting = false
-        }
-    })
 
-    // Recuperação de senha
-    sendRecoveryBtn.addEventListener("click", async () => {
-        if (!recoveryEmail.value.trim()) {
-            recoveryEmail.classList.add("is-invalid")
-            animateShake(recoveryEmail.parentElement)
-            return
+            return {
+                success: false,
+                message: "Usuário ou senha incorretos. Tente novamente.",
+            }
         }
 
-        recoveryEmail.classList.remove("is-invalid")
-        recoveryEmail.classList.add("is-valid")
+        // Função para mostrar estado de loading no botão
+        function setButtonLoading(button, isLoading) {
+            const btnText = button.querySelector(".btn-text")
+            const btnLoader = button.querySelector(".btn-loader")
 
-        // Mostrar estado de loading
-        setButtonLoading(sendRecoveryBtn, true)
+            if (isLoading) {
+                btnText.classList.add("d-none")
+                btnLoader.classList.remove("d-none")
+                button.disabled = true
+            } else {
+                btnText.classList.remove("d-none")
+                btnLoader.classList.add("d-none")
+                button.disabled = false
+            }
+        }
 
-        // Simular envio de e-mail
-        setTimeout(() => {
-            showFeedback("E-mail de recuperação enviado com sucesso!", "success")
+        // Event Listeners
 
-            // Animar fechamento do modal
-            const modalContent = document.querySelector(".modal-content")
-            modalContent.style.animation = "modalExit 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards"
+        // Adicionar efeito de foco nos inputs
+        document.querySelectorAll(".form-control").forEach((input) => {
+            input.addEventListener("focus", () => {
+                input.parentElement.classList.add("input-focus")
+            })
 
-            // Adicionar animação de saída do modal
-            if (!document.querySelector("#modalExitKeyframes")) {
-                const style = document.createElement("style")
-                style.id = "modalExitKeyframes"
-                style.textContent = `
+            input.addEventListener("blur", () => {
+                input.parentElement.classList.remove("input-focus")
+            })
+        })
+
+        // Toggle visibilidade da senha com animação
+        passwordToggle.addEventListener("click", () => {
+            const type = passwordInput.getAttribute("type") === "password" ? "text" : "password"
+            passwordInput.setAttribute("type", type)
+
+            const icon = passwordToggle.querySelector("i")
+            icon.style.transform = "translateY(-50%) scale(0)"
+
+            setTimeout(() => {
+                icon.className = type === "password" ? "bi bi-eye" : "bi bi-eye-slash"
+                icon.style.transform = "translateY(-50%) scale(1)"
+            }, 150)
+        })
+
+        // Envio do formulário de login
+        if (loginForm) {
+            loginForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                if (!validateForm()) {
+                    showFeedback("Por favor, preencha todos os campos obrigatórios.", "danger");
+                    return;
+                }
+
+                if (isSubmitting) return;
+                isSubmitting = true;
+
+                // Mostrar estado de loading
+                if (loginBtn) setButtonLoading(loginBtn, true);
+
+                try {
+                    const result = await authenticate(usernameInput.value, passwordInput.value);
+
+                    if (result.success) {
+                        // Salvar usuário se "Lembrar-me" estiver marcado
+                        if (rememberMeCheckbox && rememberMeCheckbox.checked) {
+                            localStorage.setItem("rememberedUsername", usernameInput.value);
+                        } else {
+                            localStorage.removeItem("rememberedUsername");
+                        }
+
+                        showFeedback(result.message, "success");
+
+                        // Animar saída do card
+                        const loginCard = document.querySelector(".login-card");
+                        if (loginCard) {
+                            loginCard.style.animation = "cardExit 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards";
+                        }
+
+                        // Adicionar animação de saída
+                        if (!document.querySelector("#exitKeyframes")) {
+                            const style = document.createElement("style")
+                            style.id = "exitKeyframes"
+                            style.textContent = `
+                      @keyframes cardExit {
+                          0% { transform: translateY(0) scale(1); opacity: 1; }
+                          100% { transform: translateY(-30px) scale(0.9); opacity: 0; }
+                      }
+                  `
+                            document.head.appendChild(style)
+                        }
+
+                        // Redirecionar após 1.5 segundos
+                        setTimeout(() => {
+                            window.location.href = "sejaBemVindo.html";
+                        }, 1500);
+                    } else {
+                        showFeedback(result.message, "danger");
+                        if (loginBtn) setButtonLoading(loginBtn, false);
+                    }
+                } catch (error) {
+                    console.error("Erro durante autenticação:", error);
+                    showFeedback("Ocorreu um erro ao tentar fazer login. Tente novamente.", "danger");
+                    if (loginBtn) setButtonLoading(loginBtn, false);
+                } finally {
+                    isSubmitting = false;
+                }
+            });
+        }
+
+        // Recuperação de senha
+        if (sendRecoveryBtn && recoveryEmail) {
+            sendRecoveryBtn.addEventListener("click", async () => {
+                if (!recoveryEmail.value.trim()) {
+                    recoveryEmail.classList.add("is-invalid")
+                    animateShake(recoveryEmail.parentElement)
+                    return
+                }
+
+                recoveryEmail.classList.remove("is-invalid")
+                recoveryEmail.classList.add("is-valid")
+
+                // Mostrar estado de loading
+                setButtonLoading(sendRecoveryBtn, true)
+
+                // Simular envio de e-mail
+                setTimeout(() => {
+                    showFeedback("E-mail de recuperação enviado com sucesso!", "success")
+
+                    // Animar fechamento do modal
+                    const modalContent = document.querySelector(".modal-content")
+                    modalContent.style.animation = "modalExit 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards"
+
+                    // Adicionar animação de saída do modal
+                    if (!document.querySelector("#modalExitKeyframes")) {
+                        const style = document.createElement("style")
+                        style.id = "modalExitKeyframes"
+                        style.textContent = `
                       @keyframes modalExit {
                           0% { transform: scale(1); opacity: 1; }
                           100% { transform: scale(0.9); opacity: 0; }
                       }
                   `
-                document.head.appendChild(style)
-            }
-
-            setTimeout(() => {
-                const modalElement = document.getElementById("recoveryModal")
-                const modal = bootstrap.Modal.getInstance(modalElement)
-                modal.hide()
-                recoveryForm.reset()
-
-                // Restaurar botão
-                setButtonLoading(sendRecoveryBtn, false)
-
-                // Resetar animação do modal
-                setTimeout(() => {
-                    modalContent.style.animation = ""
-                }, 300)
-            }, 500)
-        }, 1500)
-    })
-
-    // Carregar usuário salvo
-    const rememberedUsername = localStorage.getItem("rememberedUsername")
-    if (rememberedUsername) {
-        usernameInput.value = rememberedUsername
-        rememberMeCheckbox.checked = true
-    }
-
-    // Focar no primeiro campo vazio
-    if (!usernameInput.value) {
-        setTimeout(() => {
-            usernameInput.focus()
-        }, 1000) // Delay para permitir que as animações iniciais terminem
-    } else if (!passwordInput.value) {
-        setTimeout(() => {
-            passwordInput.focus()
-        }, 1000)
-    }
-
-    // Adicionar efeitos de hover nos botões
-    document
-        .querySelectorAll(".btn")
-        .forEach((btn) => {
-            btn.addEventListener("mouseenter", () => {
-                btn.style.transform = "translateY(-3px)"
-                btn.style.boxShadow = "0 5px 15px rgba(13, 110, 253, 0.4)"
-            })
-
-            btn.addEventListener("mouseleave", () => {
-                btn.style.transform = ""
-                btn.style.boxShadow = ""
-            })
-        })
-
-        // Prevenir envio do formulário ao pressionar Enter
-        ;[usernameInput, passwordInput].forEach((input) => {
-            input.addEventListener("keypress", (e) => {
-                if (e.key === "Enter") {
-                    e.preventDefault()
-                    if (e.target === usernameInput) {
-                        passwordInput.focus()
-                    } else {
-                        loginForm.requestSubmit()
+                        document.head.appendChild(style)
                     }
-                }
+
+                    setTimeout(() => {
+                        // Tratamento seguro para o modal Bootstrap
+                        setTimeout(() => {
+                            try {
+                                const modalElement = document.getElementById("recoveryModal");
+                                if (modalElement) {
+                                    const modal = bootstrapRef.Modal?.getInstance(modalElement);
+                                    if (modal) {
+                                        modal.hide();
+                                    } else {
+                                        console.warn("Instância do Modal não encontrada. O modal pode não fechar automaticamente.");
+                                        // Fallback para jQuery (se disponível)
+                                        if (window.jQuery && jQuery(modalElement).modal) {
+                                            jQuery(modalElement).modal('hide');
+                                        }
+                                    }
+                                }
+
+                                if (recoveryForm) recoveryForm.reset();
+
+                                // Restaurar botão
+                                if (sendRecoveryBtn) setButtonLoading(sendRecoveryBtn, false);
+
+                                // Resetar animação do modal
+                                setTimeout(() => {
+                                    modalContent.style.animation = ""
+                                }, 300)
+                            } catch (error) {
+                                console.error("Erro ao fechar modal:", error);
+                                // Tente recuperar de forma alternativa
+                                const modalBackdrop = document.querySelector('.modal-backdrop');
+                                if (modalBackdrop) {
+                                    modalBackdrop.remove();
+                                }
+                                const openModals = document.querySelectorAll('.modal.show');
+                                openModals.forEach(modal => {
+                                    modal.classList.remove('show');
+                                    modal.style.display = 'none';
+                                });
+                                document.body.classList.remove('modal-open');
+                            }
+                        }, 500);
+                    }, 1500)
+                }, 1500)
             })
-        })
-
-    // Adicionar efeito de partículas flutuantes
-    function createParticles() {
-        const particles = document.createElement("div")
-        particles.className = "particles"
-        document.body.appendChild(particles)
-
-        for (let i = 0; i < 50; i++) {
-            const particle = document.createElement("div")
-            particle.className = "particle"
-            particle.style.left = `${Math.random() * 100}%`
-            particle.style.top = `${Math.random() * 100}%`
-            particle.style.animationDelay = `${Math.random() * 5}s`
-            particle.style.animationDuration = `${5 + Math.random() * 10}s`
-            particle.style.opacity = Math.random() * 0.5
-            particle.style.width = particle.style.height = `${Math.random() * 10 + 1}px`
-            particles.appendChild(particle)
         }
 
-        // Adicionar estilos para partículas
-        if (!document.querySelector("#particleStyles")) {
-            const style = document.createElement("style")
-            style.id = "particleStyles"
-            style.textContent = `
+        // Carregar usuário salvo
+        const rememberedUsername = localStorage.getItem("rememberedUsername")
+        if (rememberedUsername) {
+            usernameInput.value = rememberedUsername
+            rememberMeCheckbox.checked = true
+        }
+
+        // Focar no primeiro campo vazio
+        if (!usernameInput.value) {
+            setTimeout(() => {
+                usernameInput.focus()
+            }, 1000) // Delay para permitir que as animações iniciais terminem
+        } else if (!passwordInput.value) {
+            setTimeout(() => {
+                passwordInput.focus()
+            }, 1000)
+        }
+
+        // Adicionar efeitos de hover nos botões
+        document
+            .querySelectorAll(".btn")
+            .forEach((btn) => {
+                btn.addEventListener("mouseenter", () => {
+                    btn.style.transform = "translateY(-3px)"
+                    btn.style.boxShadow = "0 5px 15px rgba(13, 110, 253, 0.4)"
+                })
+
+                btn.addEventListener("mouseleave", () => {
+                    btn.style.transform = ""
+                    btn.style.boxShadow = ""
+                })
+            })
+
+            // Prevenir envio do formulário ao pressionar Enter
+            ;[usernameInput, passwordInput].forEach((input) => {
+                input.addEventListener("keypress", (e) => {
+                    if (e.key === "Enter") {
+                        e.preventDefault()
+                        if (e.target === usernameInput) {
+                            passwordInput.focus()
+                        } else {
+                            loginForm.requestSubmit()
+                        }
+                    }
+                })
+            })
+
+        // Adicionar efeito de partículas flutuantes
+        function createParticles() {
+            const particles = document.createElement("div")
+            particles.className = "particles"
+            document.body.appendChild(particles)
+
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement("div")
+                particle.className = "particle"
+                particle.style.left = `${Math.random() * 100}%`
+                particle.style.top = `${Math.random() * 100}%`
+                particle.style.animationDelay = `${Math.random() * 5}s`
+                particle.style.animationDuration = `${5 + Math.random() * 10}s`
+                particle.style.opacity = Math.random() * 0.5
+                particle.style.width = particle.style.height = `${Math.random() * 10 + 1}px`
+                particles.appendChild(particle)
+            }
+
+            // Adicionar estilos para partículas
+            if (!document.querySelector("#particleStyles")) {
+                const style = document.createElement("style")
+                style.id = "particleStyles"
+                style.textContent = `
                   .particles {
                       position: fixed;
                       top: 0;
@@ -388,13 +460,15 @@ document.addEventListener("DOMContentLoaded", () => {
                       }
                   }
               `
-            document.head.appendChild(style)
+                document.head.appendChild(style)
+            }
         }
-    }
 
-    // Iniciar efeito de partículas
-    createParticles()
-
-    // Initialize Bootstrap's Modal component
-    const bootstrap = window.bootstrap
-})
+        // Iniciar efeito de partículas com tratamento de erro
+        try {
+            createParticles();
+        } catch (error) {
+            console.error("Erro ao criar efeito de partículas:", error);
+        }
+    });
+})();

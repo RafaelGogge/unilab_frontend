@@ -3,7 +3,25 @@
     Copyright © 2025 Rafael V. Gogge
     Projeto: UniLab - Sistema de Gerenciamento de Laboratórios
 */
-// Dados dos tutoriais (exemplo)
+
+(function () {
+    const k = ["keydown", "ctrlKey", "shiftKey", "metaKey", "key", "toLowerCase", "preventDefault"];
+    const b = ["f12", "u", "i", "j", "c", "r", "p", "s"];
+    document.addEventListener(k[0], function (e) {
+        const ctrl = e[k[1]], shift = e[k[2]], meta = e[k[3]], key = e[k[4]].toLowerCase();
+        if (
+            e[k[4]].toLowerCase() === b[0] ||
+            (ctrl && b.includes(key)) ||
+            (ctrl && shift && b.includes(key)) ||
+            (meta && shift && b.includes(key))
+        ) {
+            e[k[6]]();
+        }
+    });
+    document.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+    });
+})();
 const tutorials = [
     {
         id: 1,
@@ -66,7 +84,7 @@ function createTutorialCard(tutorial) {
 function filterTutorials(searchTerm = '', category = 'todos') {
     return tutorials.filter(tutorial => {
         const matchesSearch = tutorial.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                            tutorial.description.toLowerCase().includes(searchTerm.toLowerCase());
+            tutorial.description.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = category === 'todos' || tutorial.category === category;
         return matchesSearch && matchesCategory;
     });
@@ -94,7 +112,7 @@ categoryButtons.forEach(button => {
         categoryButtons.forEach(btn => btn.classList.remove('active'));
         // Add active class to clicked button
         button.classList.add('active');
-        
+
         const category = button.dataset.category;
         const searchTerm = searchInput.value;
         const filteredTutorials = filterTutorials(searchTerm, category);
@@ -108,7 +126,7 @@ tutorialGrid.addEventListener('click', (e) => {
     if (tutorialCard) {
         const tutorialId = tutorialCard.dataset.id;
         const tutorial = tutorials.find(t => t.id === parseInt(tutorialId));
-        
+
         if (tutorial) {
             tutorialVideo.src = tutorial.videoUrl;
             document.getElementById('videoModalLabel').textContent = tutorial.title;
@@ -131,7 +149,7 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && videoModal._isShown) {
         videoModal.hide();
     }
-    
+
     // / para focar na barra de pesquisa
     if (e.key === '/' && !e.ctrlKey && !e.metaKey) {
         e.preventDefault();

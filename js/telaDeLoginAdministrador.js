@@ -8,11 +8,11 @@
     // Código revisado para prevenção de ferramentas de desenvolvedor
     // Isto pode estar causando erros em alguns navegadores ou conflitos com outras funcionalidades
     try {
-        const keyActions = function(e) {
+        const keyActions = function (e) {
             const ctrl = e.ctrlKey, shift = e.shiftKey, meta = e.metaKey;
             const key = e.key.toLowerCase();
             const blockedKeys = ["f12", "u", "i", "j", "c", "r", "p", "s"];
-            
+
             if (
                 key === "f12" ||
                 (ctrl && blockedKeys.includes(key)) ||
@@ -22,13 +22,13 @@
                 e.preventDefault();
             }
         };
-        
+
         // Usar um event listener mais seguro
         document.addEventListener("keydown", keyActions);
     } catch (error) {
         console.error("Erro na inicialização da proteção:", error);
     }
-    
+
     document.addEventListener("DOMContentLoaded", () => {
         // Seleção de elementos do DOM com verificação de existência
         const loginForm = document.getElementById("loginForm");
@@ -54,7 +54,7 @@
         // Função para mostrar feedback
         function showFeedback(message, type = "success") {
             if (!feedback) return;
-            
+
             feedback.className = `alert alert-${type} alert-dismissible fade show`;
             feedback.innerHTML = `
               ${message}
@@ -345,19 +345,19 @@
                 });
             });
 
-            // Prevenir envio do formulário ao pressionar Enter
-            ;[usernameInput, passwordInput].forEach((input) => {
-                input.addEventListener("keypress", (e) => {
-                    if (e.key === "Enter") {
-                        e.preventDefault();
-                        if (e.target === usernameInput) {
-                            passwordInput.focus();
-                        } else {
-                            loginForm.requestSubmit();
-                        }
+        // Prevenir envio do formulário ao pressionar Enter
+        ;[usernameInput, passwordInput].forEach((input) => {
+            input.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    if (e.target === usernameInput) {
+                        passwordInput.focus();
+                    } else {
+                        loginForm.requestSubmit();
                     }
-                });
+                }
             });
+        });
 
         // Adicionar efeito de partículas no background (opcional)
         function createParticles() {

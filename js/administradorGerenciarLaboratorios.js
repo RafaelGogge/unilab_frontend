@@ -3,59 +3,73 @@
     Copyright © 2025 Rafael V. Gogge
     Projeto: UniLab - Sistema de Gerenciamento de Laboratórios
 */
-(function(){
-  const k=["keydown","ctrlKey","shiftKey","metaKey","key","toLowerCase","preventDefault"];
-  const b=["f12","u","i","j","c","r","p","s"];
-  document.addEventListener(k[0],function(e){
-    const ctrl=e[k[1]], shift=e[k[2]], meta=e[k[3]], key=e[k[4]].toLowerCase();
-    if (
-      e[k[4]].toLowerCase()===b[0] ||
-      (ctrl && b.includes(key)) ||
-      (ctrl && shift && b.includes(key)) ||
-      (meta && shift && b.includes(key))
-    ) {
-      e[k[6]]();
-    }
-  });
-    
-// Variável global para armazenar a instância do modal
+
+// IIFE para proteção contra inspeção
+(function () {
+    const k = ["keydown", "ctrlKey", "shiftKey", "metaKey", "key", "toLowerCase", "preventDefault"];
+    const b = ["f12", "u", "i", "j", "c", "r", "p", "s"];
+    document.addEventListener(k[0], function (e) {
+        const ctrl = e[k[1]], shift = e[k[2]], meta = e[k[3]], key = e[k[4]].toLowerCase();
+        if (
+            e[k[4]].toLowerCase() === b[0] ||
+            (ctrl && b.includes(key)) ||
+            (ctrl && shift && b.includes(key)) ||
+            (meta && shift && b.includes(key))
+        ) {
+            e[k[6]]();
+        }
+    });
+})(); 
+
+// Constantes para uso no localStorage
+const STORAGE_KEYS = {
+    LABORATORIOS: 'laboratorios',
+    AUTH: 'isAuthenticated',
+    ROLE: 'userRole',
+    NAME: 'userName',
+    REMEMBER: 'rememberMe',
+    USERNAME: 'username'
+};
+
+// Variáveis globais
 let labModalInstance;
-// Recupera os laboratórios do localStorage ou inicializa com um array vazio
-let laboratorios = JSON.parse(localStorage.getItem("laboratorios")) || [];
+let laboratorios = JSON.parse(localStorage.getItem(STORAGE_KEYS.LABORATORIOS)) || [];
 
 // Verificar autenticação
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     checkAuth();
     initializeLaboratorios();
     loadLaboratories();
     setupEventListeners();
+    // Inicializa animações
+    animateOnScroll();
 });
 
 // Event Listeners
 function setupEventListeners() {
     // Formulário de filtros
-    document.getElementById('filterForm').addEventListener('submit', function(e) {
+    document.getElementById('filterForm').addEventListener('submit', function (e) {
         e.preventDefault();
         filterLaboratories();
     });
 
     // Botão de novo laboratório
-    document.getElementById('btnNovoLaboratorio').addEventListener('click', function() {
+    document.getElementById('btnNovoLaboratorio').addEventListener('click', function () {
         openLaboratoryModal();
     });
 
     // Botão de salvar no modal
-    document.getElementById('btnSalvarLaboratorio').addEventListener('click', function() {
+    document.getElementById('btnSalvarLaboratorio').addEventListener('click', function () {
         saveLaboratory();
     });
 
     // Botão de limpar filtros
-    document.getElementById('btnLimparFiltros').addEventListener('click', function() {
+    document.getElementById('btnLimparFiltros').addEventListener('click', function () {
         clearFilters();
     });
-    
+
     // Botão de logout
-    document.querySelector('.logout-button').addEventListener('click', function(e) {
+    document.querySelector('.logout-button').addEventListener('click', function (e) {
         e.preventDefault();
         logout();
     });
@@ -63,23 +77,19 @@ function setupEventListeners() {
 
 // Verificar autenticação
 function checkAuth() {
-    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
-    const userRole = localStorage.getItem('userRole');
-    
-    // Verificar se o usuário está autenticado e se é um administrador
+    const isAuthenticated = localStorage.getItem(STORAGE_KEYS.AUTH) === 'true';
+    const userRole = localStorage.getItem(STORAGE_KEYS.ROLE);
+
     if (!isAuthenticated || userRole !== 'administrador') {
-        // Mostrar uma mensagem antes de redirecionar se o usuário estiver autenticado, mas não for administrador
         if (isAuthenticated && userRole !== 'administrador') {
-            // Salvar mensagem para ser exibida na página de destino
             sessionStorage.setItem('redirectMessage', 'Você não tem permissão para acessar a página de gerenciamento de laboratórios.');
             sessionStorage.setItem('redirectMessageType', 'danger');
         }
         window.location.href = 'sejaBemVindo.html';
         return;
     }
-    
-    // Atualizar nome do usuário, se disponível
-    const userName = localStorage.getItem('userName');
+
+    const userName = localStorage.getItem(STORAGE_KEYS.NAME);
     const userNameElement = document.querySelector('.user-name');
     if (userName && userNameElement) {
         userNameElement.textContent = userName;
@@ -88,28 +98,39 @@ function checkAuth() {
 
 // Inicializar a estrutura dos laboratórios se necessário
 function initializeLaboratorios() {
-    // Converter laboratórios antigos para o novo formato, se houver
-    if (laboratorios.length > 0 && laboratorios[0].ativo !== undefined) {
-        laboratorios = laboratorios.map(lab => {
-            return {
-                id: lab.id || generateId(),
-                nome: lab.nome || '',
-                localizacao: lab.localizacao || '',
-                tipo: lab.tipo || 'outro',
-                capacidade: lab.computadores || 0,
-                status: lab.ativo ? 'ativo' : 'inativo'
-            };
-        });
-        localStorage.setItem('laboratorios', JSON.stringify(laboratorios));
+    try {
+        // Converter laboratórios antigos para o novo formato, se houver
+        if (laboratorios.length > 0 && laboratorios[0].ativo !== undefined) {
+            laboratorios = laboratorios.map(lab => {
+                return {
+                    id: lab.id || generateId(),
+                    nome: lab.nome || '',
+                    localizacao: lab.localizacao || '',
+                    tipo: lab.tipo || 'outro',
+                    capacidade: lab.computadores || 0,
+                    status: lab.ativo ? 'ativo' : 'inativo'
+                };
+            });
+            localStorage.setItem(STORAGE_KEYS.LABORATORIOS, JSON.stringify(laboratorios));
+        }
+    } catch (error) {
+        console.error('Erro ao inicializar laboratórios:', error);
+        laboratorios = [];
     }
-
 }
 
 // Carregar laboratórios
 function loadLaboratories() {
-    laboratorios = JSON.parse(localStorage.getItem('laboratorios')) || [];
-    updateStatistics(laboratorios);
-    displayLaboratories(laboratorios);
+    try {
+        laboratorios = JSON.parse(localStorage.getItem(STORAGE_KEYS.LABORATORIOS)) || [];
+        updateStatistics(laboratorios);
+        displayLaboratories(laboratorios);
+    } catch (error) {
+        console.error('Erro ao carregar laboratórios:', error);
+        showNotification('Erro ao carregar laboratórios.', 'danger');
+        laboratorios = [];
+        displayLaboratories([]);
+    }
 }
 
 // Atualizar estatísticas
@@ -166,10 +187,10 @@ function filterLaboratories() {
 
     let filteredLabs = laboratorios.filter(lab => {
         const matchesSearch = (lab.nome || '').toLowerCase().includes(searchTerm) ||
-                            (lab.localizacao || '').toLowerCase().includes(searchTerm);
+            (lab.localizacao || '').toLowerCase().includes(searchTerm);
         const matchesStatus = !status || lab.status === status;
         const matchesTipo = !tipo || lab.tipo === tipo;
-        
+
         return matchesSearch && matchesStatus && matchesTipo;
     });
 
@@ -182,41 +203,49 @@ function clearFilters() {
     loadLaboratories();
 }
 
-// Função para adicionar uma ferramenta
-function adicionarFerramenta(button) {
-    const input = button.parentElement.querySelector('input');
-    const ferramenta = input.value.trim();
-    
-    if (ferramenta) {
-        const listaFerramentas = document.getElementById('listaFerramentas');
-        const ferramentaDiv = document.createElement('div');
-        ferramentaDiv.className = 'ferramenta-item d-flex align-items-center mb-2';
-        ferramentaDiv.innerHTML = `
-            <span class="me-2">${ferramenta}</span>
-            <button type="button" class="btn btn-danger btn-sm" onclick="removerFerramenta(this)">
-                <i class="bi bi-trash"></i>
-            </button>
-        `;
-        
-        listaFerramentas.appendChild(ferramentaDiv);
-        input.value = '';
-        atualizarFerramentasHidden();
+// Salvar laboratório
+function saveLaboratory() {
+    try {
+        const form = document.getElementById('laboratorioForm');
+        const labId = form.dataset.labId;
+        const ferramentasValue = document.getElementById('ferramentas').value;
+
+        const lab = {
+            id: labId || generateId(),
+            nome: form.nome.value.trim(),
+            localizacao: form.localizacao.value.trim(),
+            tipo: form.tipo.value,
+            capacidade: parseInt(form.capacidade.value) || 0,
+            status: form.status.value,
+            ferramentas: ferramentasValue ? JSON.parse(ferramentasValue) : []
+        };
+
+        if (!validateLaboratory(lab)) {
+            showNotification('Por favor, preencha todos os campos obrigatórios.', 'danger');
+            return;
+        }
+
+        if (labId) {
+            // Atualizar laboratório existente
+            laboratorios = laboratorios.map(l => l.id === labId ? lab : l);
+        } else {
+            // Adicionar novo laboratório
+            laboratorios.push(lab);
+        }
+
+        localStorage.setItem(STORAGE_KEYS.LABORATORIOS, JSON.stringify(laboratorios));
+
+        // Fechar o modal e atualizar a lista
+        const modal = bootstrap.Modal.getInstance(document.getElementById('laboratorioModal'));
+        modal.hide();
+
+        loadLaboratories();
+        updateStats(); // Atualiza estatísticas com animação
+        showNotification('Laboratório salvo com sucesso!', 'success');
+    } catch (error) {
+        console.error('Erro ao salvar laboratório:', error);
+        showNotification('Erro ao salvar laboratório.', 'danger');
     }
-}
-
-// Função para remover uma ferramenta
-function removerFerramenta(button) {
-    button.parentElement.remove();
-    atualizarFerramentasHidden();
-}
-
-// Função para atualizar o campo hidden com a lista de ferramentas
-function atualizarFerramentasHidden() {
-    const ferramentas = [];
-    document.querySelectorAll('.ferramenta-item span').forEach(span => {
-        ferramentas.push(span.textContent);
-    });
-    document.getElementById('ferramentas').value = JSON.stringify(ferramentas);
 }
 
 // Abrir modal de laboratório
@@ -228,7 +257,7 @@ function openLaboratoryModal(labId = null) {
 
     form.reset();
     listaFerramentas.innerHTML = '';
-    
+
     if (labId) {
         title.textContent = 'Editar Laboratório';
         const lab = getLaboratoryById(labId);
@@ -239,7 +268,7 @@ function openLaboratoryModal(labId = null) {
             form.capacidade.value = lab.capacidade || 0;
             form.status.value = lab.status || 'inativo';
             form.dataset.labId = labId;
-            
+
             // Carregar ferramentas existentes
             if (lab.ferramentas && Array.isArray(lab.ferramentas)) {
                 lab.ferramentas.forEach(ferramenta => {
@@ -264,43 +293,41 @@ function openLaboratoryModal(labId = null) {
     modal.show();
 }
 
-// Salvar laboratório
-function saveLaboratory() {
-    const form = document.getElementById('laboratorioForm');
-    const labId = form.dataset.labId;
-    const ferramentasValue = document.getElementById('ferramentas').value;
-    
-    const lab = {
-        id: labId || generateId(),
-        nome: form.nome.value,
-        localizacao: form.localizacao.value,
-        tipo: form.tipo.value,
-        capacidade: parseInt(form.capacidade.value),
-        status: form.status.value,
-        ferramentas: ferramentasValue ? JSON.parse(ferramentasValue) : []
-    };
+// Função para adicionar uma ferramenta
+function adicionarFerramenta(button) {
+    const input = button.parentElement.querySelector('input');
+    const ferramenta = input.value.trim();
 
-    if (!validateLaboratory(lab)) {
-        showNotification('Por favor, preencha todos os campos obrigatórios.', 'danger');
-        return;
-    }
-    
-    if (labId) {
-        // Atualizar laboratório existente
-        laboratorios = laboratorios.map(l => l.id === labId ? lab : l);
-    } else {
-        // Adicionar novo laboratório
-        laboratorios.push(lab);
-    }
+    if (ferramenta) {
+        const listaFerramentas = document.getElementById('listaFerramentas');
+        const ferramentaDiv = document.createElement('div');
+        ferramentaDiv.className = 'ferramenta-item d-flex align-items-center mb-2';
+        ferramentaDiv.innerHTML = `
+            <span class="me-2">${ferramenta}</span>
+            <button type="button" class="btn btn-danger btn-sm" onclick="removerFerramenta(this)">
+                <i class="bi bi-trash"></i>
+            </button>
+        `;
 
-    localStorage.setItem('laboratorios', JSON.stringify(laboratorios));
-    
-    // Fechar o modal e atualizar a lista
-    const modal = bootstrap.Modal.getInstance(document.getElementById('laboratorioModal'));
-    modal.hide();
-    
-    loadLaboratories();
-    showNotification('Laboratório salvo com sucesso!', 'success');
+        listaFerramentas.appendChild(ferramentaDiv);
+        input.value = '';
+        atualizarFerramentasHidden();
+    }
+}
+
+// Função para remover uma ferramenta
+function removerFerramenta(button) {
+    button.parentElement.remove();
+    atualizarFerramentasHidden();
+}
+
+// Função para atualizar o campo hidden com a lista de ferramentas
+function atualizarFerramentasHidden() {
+    const ferramentas = [];
+    document.querySelectorAll('.ferramenta-item span').forEach(span => {
+        ferramentas.push(span.textContent);
+    });
+    document.getElementById('ferramentas').value = JSON.stringify(ferramentas);
 }
 
 // Editar laboratório
@@ -311,14 +338,74 @@ function editLaboratory(labId) {
 // Excluir laboratório
 function deleteLaboratory(labId) {
     if (confirm('Tem certeza que deseja excluir este laboratório?')) {
-        laboratorios = laboratorios.filter(lab => lab.id !== labId);
-        localStorage.setItem('laboratorios', JSON.stringify(laboratorios));
-        loadLaboratories();
-        showNotification('Laboratório excluído com sucesso!', 'success');
+        try {
+            laboratorios = laboratorios.filter(lab => lab.id !== labId);
+            localStorage.setItem(STORAGE_KEYS.LABORATORIOS, JSON.stringify(laboratorios));
+            loadLaboratories();
+            updateStats(); // Atualiza estatísticas com animação
+            showNotification('Laboratório excluído com sucesso!', 'success');
+        } catch (error) {
+            console.error('Erro ao excluir laboratório:', error);
+            showNotification('Erro ao excluir laboratório.', 'danger');
+        }
     }
 }
 
-// Funções auxiliares
+// Funções que precisam estar no escopo global
+window.adicionarFerramenta = function (button) {
+    const input = button.parentElement.querySelector('input');
+    const ferramenta = input.value.trim();
+
+    if (ferramenta) {
+        const listaFerramentas = document.getElementById('listaFerramentas');
+        const ferramentaDiv = document.createElement('div');
+        ferramentaDiv.className = 'ferramenta-item d-flex align-items-center mb-2';
+        ferramentaDiv.innerHTML = `
+            <span class="me-2">${ferramenta}</span>
+            <button type="button" class="btn btn-danger btn-sm" onclick="removerFerramenta(this)">
+                <i class="bi bi-trash"></i>
+            </button>
+        `;
+
+        listaFerramentas.appendChild(ferramentaDiv);
+        input.value = '';
+        atualizarFerramentasHidden();
+    }
+};
+
+window.removerFerramenta = function (button) {
+    button.parentElement.remove();
+    atualizarFerramentasHidden();
+};
+
+window.atualizarFerramentasHidden = function () {
+    const ferramentas = [];
+    document.querySelectorAll('.ferramenta-item span').forEach(span => {
+        ferramentas.push(span.textContent);
+    });
+    document.getElementById('ferramentas').value = JSON.stringify(ferramentas);
+};
+
+window.editLaboratory = function (labId) {
+    openLaboratoryModal(labId);
+};
+
+window.deleteLaboratory = function (labId) {
+    if (confirm('Tem certeza que deseja excluir este laboratório?')) {
+        try {
+            laboratorios = laboratorios.filter(lab => lab.id !== labId);
+            localStorage.setItem(STORAGE_KEYS.LABORATORIOS, JSON.stringify(laboratorios));
+            loadLaboratories();
+            updateStats(); // Atualiza estatísticas com animação
+            showNotification('Laboratório excluído com sucesso!', 'success');
+        } catch (error) {
+            console.error('Erro ao excluir laboratório:', error);
+            showNotification('Erro ao excluir laboratório.', 'danger');
+        }
+    }
+};
+
+// Funções auxiliares melhoradas
 function getLaboratoryById(labId) {
     return laboratorios.find(lab => lab.id === labId);
 }
@@ -328,7 +415,11 @@ function generateId() {
 }
 
 function validateLaboratory(lab) {
-    return lab.nome && lab.localizacao && lab.tipo && lab.capacidade > 0 && lab.status;
+    return lab.nome &&
+        lab.localizacao &&
+        lab.tipo &&
+        lab.capacidade > 0 &&
+        lab.status;
 }
 
 function formatStatus(status) {
@@ -350,21 +441,41 @@ function formatTipo(tipo) {
     return tipoMap[tipo] || tipo;
 }
 
-// Sistema de notificações
+// Sistema de notificações unificado
 function showNotification(message, type = 'info') {
-    const notification = document.getElementById('notification');
-    const notificationBody = document.getElementById('notificationBody');
-    
-    if (!notification || !notificationBody) {
-        alert(message);
-        return;
+    let notification = document.getElementById('notification');
+
+    if (!notification) {
+        notification = document.createElement('div');
+        notification.id = 'notification';
+        notification.setAttribute('role', 'alert');
+        notification.setAttribute('aria-live', 'assertive');
+        notification.setAttribute('aria-atomic', 'true');
+
+        // Estilos aplicados uma vez
+        Object.assign(notification.style, {
+            position: 'fixed',
+            bottom: '20px',
+            right: '20px',
+            zIndex: '5000'
+        });
+
+        document.body.appendChild(notification);
     }
-    
-    notificationBody.textContent = message;
+
+    // Atualizar classe e conteúdo
     notification.className = `toast align-items-center text-white bg-${type} border-0`;
-    
+    notification.innerHTML = `
+        <div class="d-flex">
+            <div class="toast-body" id="notificationBody">
+                ${message}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
+        </div>
+    `;
+
     try {
-        const toast = new bootstrap.Toast(notification);
+        const toast = new bootstrap.Toast(notification, { delay: 5000 });
         toast.show();
     } catch (e) {
         console.error('Erro ao mostrar notificação:', e);
@@ -372,13 +483,18 @@ function showNotification(message, type = 'info') {
     }
 }
 
-// Logout
+// Logout seguro
 function logout() {
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('userRole');
-    localStorage.removeItem('userName');
-    localStorage.removeItem('rememberMe');
-    localStorage.removeItem('username');
+    // Remover todos os itens relacionados à autenticação
+    [
+        STORAGE_KEYS.AUTH,
+        STORAGE_KEYS.ROLE,
+        STORAGE_KEYS.NAME,
+        STORAGE_KEYS.REMEMBER,
+        STORAGE_KEYS.USERNAME
+    ].forEach(key => localStorage.removeItem(key));
+
+    // Redirecionar para a página de login
     window.location.href = 'index.html';
 }
 
@@ -404,13 +520,13 @@ function addRippleEffect(event) {
     const button = event.currentTarget;
     const ripple = document.createElement('span');
     const rect = button.getBoundingClientRect();
-    
+
     ripple.className = 'ripple';
     ripple.style.left = `${event.clientX - rect.left}px`;
     ripple.style.top = `${event.clientY - rect.top}px`;
-    
+
     button.appendChild(ripple);
-    
+
     ripple.addEventListener('animationend', () => {
         ripple.remove();
     });
@@ -440,7 +556,7 @@ function animateNumber(element, final) {
     const range = final - start;
     const increment = range / (duration / 16);
     let current = start;
-    
+
     const animate = () => {
         current += increment;
         if ((increment >= 0 && current >= final) || (increment < 0 && current <= final)) {
@@ -450,14 +566,14 @@ function animateNumber(element, final) {
         element.textContent = Math.round(current);
         requestAnimationFrame(animate);
     };
-    
+
     animate();
 }
 
 // Função para adicionar laboratório com animação
 function adicionarLaboratorio(event) {
     event.preventDefault();
-    
+
     const nome = document.getElementById('nome').value;
     const localizacao = document.getElementById('localizacao').value;
     const tipo = document.getElementById('tipo').value;
@@ -476,20 +592,20 @@ function adicionarLaboratorio(event) {
 
     laboratorios.push(novoLab);
     salvarLaboratorios();
-    
+
     const modal = bootstrap.Modal.getInstance(document.getElementById('laboratorioModal'));
     modal.hide();
-    
+
     // Adiciona o novo laboratório com animação
     const row = criarLinhaLaboratorio(novoLab, laboratorios.length - 1);
     row.style.opacity = '0';
     document.querySelector('#laboratoriosTable tbody').appendChild(row);
-    
+
     requestAnimationFrame(() => {
         row.style.opacity = '1';
         row.style.transform = 'translateY(0)';
     });
-    
+
     updateStats();
     showNotification('Sucesso!', 'Laboratório adicionado com sucesso.');
 }
@@ -507,14 +623,14 @@ function showNotification(title, message) {
             ${message}
         </div>
     `;
-    
+
     document.body.appendChild(toast);
-    
+
     requestAnimationFrame(() => {
         toast.style.transform = 'translateX(0)';
         toast.style.opacity = '1';
     });
-    
+
     setTimeout(() => {
         toast.style.transform = 'translateX(100%)';
         toast.style.opacity = '0';
@@ -527,19 +643,19 @@ document.addEventListener('DOMContentLoaded', () => {
     carregarLaboratorios();
     updateStats();
     animateOnScroll();
-    
+
     // Adiciona efeito de ripple aos botões
     document.querySelectorAll('.btn').forEach(button => {
         button.addEventListener('click', addRippleEffect);
     });
-    
+
     // Adiciona animação ao hover nas linhas da tabela
     document.querySelectorAll('tbody tr').forEach(row => {
         row.addEventListener('mouseenter', () => {
             row.style.transform = 'scale(1.01)';
             row.style.backgroundColor = 'var(--table-row-hover)';
         });
-        
+
         row.addEventListener('mouseleave', () => {
             row.style.transform = 'scale(1)';
             row.style.backgroundColor = '';

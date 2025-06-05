@@ -23,25 +23,25 @@
   <!-- Favicon -->
   <link rel="shortcut icon" href="favicon/favicon.ico" type="image/x-icon" />
 
-    <script defer>
-    (function(){
-      const k=["keydown","ctrlKey","shiftKey","metaKey","key","toLowerCase","preventDefault"];
-      const b=["f12","u","i","j","c","r","p","s"];
-      document.addEventListener(k[0],function(e){
-        const ctrl=e[k[1]], shift=e[k[2]], meta=e[k[3]], key=e[k[4]].toLowerCase();
+  <script defer>
+    (function () {
+      const k = ["keydown", "ctrlKey", "shiftKey", "metaKey", "key", "toLowerCase", "preventDefault"];
+      const b = ["f12", "u", "i", "j", "c", "r", "p", "s"];
+      document.addEventListener(k[0], function (e) {
+        const ctrl = e[k[1]], shift = e[k[2]], meta = e[k[3]], key = e[k[4]].toLowerCase();
         if (
-          key===b[0] || (ctrl && b.includes(key)) ||
+          key === b[0] || (ctrl && b.includes(key)) ||
           (ctrl && shift && b.includes(key)) || (meta && shift && b.includes(key))
         ) {
           e[k[6]]();
         }
       });
-      document.addEventListener("contextmenu",function(e){
+      document.addEventListener("contextmenu", function (e) {
         e.preventDefault();
       });
     })();
   </script>
-  
+
 </head>
 
 <body class="d-flex flex-column min-vh-100">
