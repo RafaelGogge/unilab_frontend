@@ -4,27 +4,38 @@
     Projeto: UniLab - Sistema de Gerenciamento de Laboratórios
 */
 
-(function(){
-  const k=["keydown","ctrlKey","shiftKey","metaKey","key","toLowerCase","preventDefault"];
-  const b=["f12","u","i","j","c","r","p","s"];
-  document.addEventListener(k[0],function(e){
-    const ctrl=e[k[1]], shift=e[k[2]], meta=e[k[3]], key=e[k[4]].toLowerCase();
-    if (
-      e[k[4]].toLowerCase()===b[0] ||
-      (ctrl && b.includes(key)) ||
-      (ctrl && shift && b.includes(key)) ||
-      (meta && shift && b.includes(key))
-    ) {
-      e[k[6]]();
-    }
-  });
-// Variável global para armazenar a instância do modal
+(function () {
+    const k = ["keydown", "ctrlKey", "shiftKey", "metaKey", "key", "toLowerCase", "preventDefault"];
+    const b = ["f12", "u", "i", "j", "c", "r", "p", "s"];
+    document.addEventListener(k[0], function (e) {
+        const ctrl = e[k[1]], shift = e[k[2]], meta = e[k[3]], key = e[k[4]].toLowerCase();
+        if (
+            e[k[4]].toLowerCase() === b[0] ||
+            (ctrl && b.includes(key)) ||
+            (ctrl && shift && b.includes(key)) ||
+            (meta && shift && b.includes(key))
+        ) {
+            e[k[6]]();
+        }
+    });
+})();
+
+// Variáveis e constantes globais
 let professorModalInstance;
-// Recupera os professores do localStorage ou inicializa com um array vazio
 let professores = [];
 
+// Constantes para uso no localStorage
+const STORAGE_KEYS = {
+    PROFESSORES: 'professores',
+    AUTH: 'isAuthenticated',
+    ROLE: 'userRole',
+    NAME: 'userName',
+    REMEMBER: 'rememberMe',
+    USERNAME: 'username'
+};
+
 // Verificar autenticação quando a página carrega
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     checkAuth();
     loadProfessores();
     setupEventListeners();
@@ -33,33 +44,33 @@ document.addEventListener('DOMContentLoaded', function() {
 // Configurar event listeners
 function setupEventListeners() {
     // Formulário de filtros
-    document.getElementById('filterForm').addEventListener('submit', function(e) {
+    document.getElementById('filterForm').addEventListener('submit', function (e) {
         e.preventDefault();
         filterProfessores();
     });
 
     // Botão de novo professor (no cabeçalho)
-    document.getElementById('novoProfessor').addEventListener('click', function() {
+    document.getElementById('novoProfessor').addEventListener('click', function () {
         openProfessorModal();
     });
 
     // Botão flutuante de novo professor
-    document.getElementById('btnNovoProfessor').addEventListener('click', function() {
+    document.getElementById('btnNovoProfessor').addEventListener('click', function () {
         openProfessorModal();
     });
 
     // Botão de salvar no modal
-    document.getElementById('salvarProfessor').addEventListener('click', function() {
+    document.getElementById('salvarProfessor').addEventListener('click', function () {
         saveProfessor();
     });
 
     // Botão de limpar filtros
-    document.querySelector('button[type="reset"]').addEventListener('click', function() {
+    document.querySelector('button[type="reset"]').addEventListener('click', function () {
         clearFilters();
     });
-    
+
     // Botão de logout
-    document.querySelector('.logout-button').addEventListener('click', function(e) {
+    document.querySelector('.logout-button').addEventListener('click', function (e) {
         e.preventDefault();
         logout();
     });
@@ -67,23 +78,19 @@ function setupEventListeners() {
 
 // Verificar autenticação
 function checkAuth() {
-    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
-    const userRole = localStorage.getItem('userRole');
-    
-    // Verificar se o usuário está autenticado e se é um administrador
+    const isAuthenticated = localStorage.getItem(STORAGE_KEYS.AUTH) === 'true';
+    const userRole = localStorage.getItem(STORAGE_KEYS.ROLE);
+
     if (!isAuthenticated || userRole !== 'administrador') {
-        // Mostrar uma mensagem antes de redirecionar se o usuário estiver autenticado, mas não for administrador
         if (isAuthenticated && userRole !== 'administrador') {
-            // Salvar mensagem para ser exibida na página de destino
             sessionStorage.setItem('redirectMessage', 'Você não tem permissão para acessar a página de gerenciamento de professores.');
             sessionStorage.setItem('redirectMessageType', 'danger');
         }
         window.location.href = 'sejaBemVindo.html';
         return;
     }
-    
-    // Atualizar nome do usuário, se disponível
-    const userName = localStorage.getItem('userName');
+
+    const userName = localStorage.getItem(STORAGE_KEYS.NAME);
     const userNameElement = document.querySelector('.user-name');
     if (userName && userNameElement) {
         userNameElement.textContent = userName;
@@ -92,16 +99,23 @@ function checkAuth() {
 
 // Inicializar a estrutura dos professores se necessário
 function initializeProfessores() {
-    // Limpar professores do localStorage
-    localStorage.removeItem('professores');
+    localStorage.removeItem(STORAGE_KEYS.PROFESSORES);
     professores = [];
 }
 
 // Carregar professores
 function loadProfessores() {
-    professores = JSON.parse(localStorage.getItem('professores')) || [];
-    updateStatistics(professores);
-    displayProfessores(professores);
+    try {
+        const data = localStorage.getItem(STORAGE_KEYS.PROFESSORES);
+        professores = data ? JSON.parse(data) : [];
+        updateStatistics(professores);
+        displayProfessores(professores);
+    } catch (error) {
+        console.error('Erro ao carregar dados:', error);
+        showNotification('Erro ao carregar dados de professores.', 'danger');
+        professores = [];
+        displayProfessores([]);
+    }
 }
 
 // Atualizar estatísticas
@@ -109,7 +123,7 @@ function updateStatistics(profs) {
     const total = profs.length;
     const ativos = profs.filter(prof => prof.status === 'ativo').length;
     const inativos = profs.filter(prof => prof.status === 'inativo').length;
-    
+
     // Contar departamentos únicos
     const departamentos = [...new Set(profs.map(prof => prof.departamento))];
     const totalDepartamentos = departamentos.length;
@@ -164,11 +178,11 @@ function filterProfessores() {
 
     let filteredProfs = professores.filter(prof => {
         const matchesSearch = (prof.nome || '').toLowerCase().includes(searchTerm) ||
-                            (prof.email || '').toLowerCase().includes(searchTerm) ||
-                            (prof.matricula || '').toLowerCase().includes(searchTerm);
+            (prof.email || '').toLowerCase().includes(searchTerm) ||
+            (prof.matricula || '').toLowerCase().includes(searchTerm);
         const matchesStatus = !status || prof.status === status;
         const matchesDepartamento = !departamento || prof.departamento === departamento;
-        
+
         return matchesSearch && matchesStatus && matchesDepartamento;
     });
 
@@ -211,10 +225,18 @@ function openProfessorModal(profId = null) {
 function saveProfessor() {
     const form = document.getElementById('professorForm');
     const profId = form.dataset.profId;
+    const email = form.email.value.trim().toLowerCase();
+
+    // Validar e-mail
+    if (!validateEmail(email)) {
+        showNotification('Por favor, insira um e-mail válido.', 'danger');
+        return;
+    }
+
     const prof = {
         id: profId || generateId(),
         nome: form.nome.value.trim().toUpperCase(),
-        email: form.email.value.trim().toLowerCase(),
+        email: email,
         matricula: form.matricula.value.trim() || generateMatricula(),
         departamento: form.departamento.value,
         status: form.status.value,
@@ -225,38 +247,44 @@ function saveProfessor() {
         showNotification('Por favor, preencha todos os campos obrigatórios.', 'danger');
         return;
     }
-    
+
+    // Verificar se o e-mail já existe (exceto para o próprio professor em edição)
+    const emailExists = professores.some(p => p.email === prof.email && p.id !== prof.id);
+    if (emailExists) {
+        showNotification('Este e-mail já está sendo utilizado por outro professor.', 'warning');
+        return;
+    }
+
     if (profId) {
-        // Atualizar professor existente
         professores = professores.map(p => p.id === profId ? prof : p);
     } else {
-        // Adicionar novo professor
         professores.push(prof);
     }
 
-    localStorage.setItem('professores', JSON.stringify(professores));
-    
     try {
+        localStorage.setItem(STORAGE_KEYS.PROFESSORES, JSON.stringify(professores));
+
         const modalEl = document.getElementById('professorModal');
         const modalInstance = bootstrap.Modal.getInstance(modalEl);
         if (modalInstance) {
             modalInstance.hide();
         }
-    } catch (e) {
-        console.error('Erro ao fechar modal:', e);
+
+        loadProfessores();
+        showNotification(`Professor ${profId ? 'atualizado' : 'adicionado'} com sucesso!`, 'success');
+    } catch (error) {
+        console.error('Erro ao salvar dados:', error);
+        showNotification('Erro ao salvar dados. Verifique o console para mais detalhes.', 'danger');
     }
-    
-    loadProfessores();
-    showNotification(`Professor ${profId ? 'atualizado' : 'adicionado'} com sucesso!`, 'success');
 }
 
 // Editar professor
-function editProfessor(profId) {
+window.editProfessor = function (profId) {
     openProfessorModal(profId);
 }
 
 // Excluir professor
-function deleteProfessor(profId) {
+window.deleteProfessor = function (profId) {
     if (confirm('Tem certeza que deseja excluir este professor?')) {
         professores = professores.filter(prof => prof.id !== profId);
         localStorage.setItem('professores', JSON.stringify(professores));
@@ -266,7 +294,7 @@ function deleteProfessor(profId) {
 }
 
 // Mostrar senha do professor
-function showPassword(profId) {
+window.showPassword = function (profId) {
     const prof = getProfessorById(profId);
     if (prof) {
         alert(`Senha do professor ${prof.nome}: ${prof.senha}`);
@@ -299,8 +327,20 @@ function generateMatricula() {
     return `${ano}${num}`;
 }
 
+// Validação de e-mail
+function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+}
+
+// Validação completa do professor
 function validateProfessor(prof) {
-    return prof.nome && prof.email && prof.matricula && prof.departamento && prof.status;
+    return prof.nome &&
+        prof.email &&
+        validateEmail(prof.email) &&
+        prof.matricula &&
+        prof.departamento &&
+        prof.status;
 }
 
 function formatStatus(status) {
@@ -322,44 +362,41 @@ function formatDepartamento(departamento) {
     return deptoMap[departamento] || departamento;
 }
 
-// Sistema de notificações
+// Sistema de notificações otimizado
 function showNotification(message, type = 'info') {
-    // Verificar se existe um elemento de notificação no DOM
     let notification = document.getElementById('notification');
-    
-    // Se não existir, criar um
+
     if (!notification) {
         notification = document.createElement('div');
         notification.id = 'notification';
-        notification.className = `toast align-items-center text-white bg-${type} border-0`;
         notification.setAttribute('role', 'alert');
         notification.setAttribute('aria-live', 'assertive');
         notification.setAttribute('aria-atomic', 'true');
-        notification.style.position = 'fixed';
-        notification.style.bottom = '20px';
-        notification.style.right = '20px';
-        notification.style.zIndex = '5000';
-        
-        notification.innerHTML = `
-            <div class="d-flex">
-                <div class="toast-body" id="notificationBody">
-                    ${message}
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
-            </div>
-        `;
-        
+
+        // Estilos aplicados uma vez
+        Object.assign(notification.style, {
+            position: 'fixed',
+            bottom: '20px',
+            right: '20px',
+            zIndex: '5000'
+        });
+
         document.body.appendChild(notification);
-    } else {
-        const notificationBody = document.getElementById('notificationBody');
-        if (notificationBody) {
-            notificationBody.textContent = message;
-        }
-        notification.className = `toast align-items-center text-white bg-${type} border-0`;
     }
-    
+
+    // Atualizar classe e conteúdo
+    notification.className = `toast align-items-center text-white bg-${type} border-0`;
+    notification.innerHTML = `
+        <div class="d-flex">
+            <div class="toast-body" id="notificationBody">
+                ${message}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
+        </div>
+    `;
+
     try {
-        const toast = new bootstrap.Toast(notification);
+        const toast = new bootstrap.Toast(notification, { delay: 5000 });
         toast.show();
     } catch (e) {
         console.error('Erro ao mostrar notificação:', e);
@@ -367,12 +404,17 @@ function showNotification(message, type = 'info') {
     }
 }
 
-// Logout
+// Logout seguro
 function logout() {
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('userRole');
-    localStorage.removeItem('userName');
-    localStorage.removeItem('rememberMe');
-    localStorage.removeItem('username');
+    // Remover todos os itens relacionados à autenticação
+    [
+        STORAGE_KEYS.AUTH,
+        STORAGE_KEYS.ROLE,
+        STORAGE_KEYS.NAME,
+        STORAGE_KEYS.REMEMBER,
+        STORAGE_KEYS.USERNAME
+    ].forEach(key => localStorage.removeItem(key));
+
+    // Redirecionar para a página de login
     window.location.href = 'index.html';
 }
