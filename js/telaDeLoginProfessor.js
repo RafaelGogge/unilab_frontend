@@ -159,7 +159,7 @@
             await new Promise((resolve) => setTimeout(resolve, 1500))
 
             // Credenciais de teste
-            if (username === "professor" && password === "123456") {
+            if (username === "professor" && password === "professor") {
                 // Salvar informações do usuário
                 localStorage.setItem("isAuthenticated", "true")
                 localStorage.setItem("userRole", "professor")
