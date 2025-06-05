@@ -3,112 +3,164 @@
     Copyright © 2025 Rafael V. Gogge
     Projeto: UniLab - Sistema de Gerenciamento de Laboratórios
 */
-(function(){
-  const k=["keydown","ctrlKey","shiftKey","metaKey","key","toLowerCase","preventDefault"];
-  const b=["f12","u","i","j","c","r","p","s"];
-  document.addEventListener(k[0],function(e){
-    const ctrl=e[k[1]], shift=e[k[2]], meta=e[k[3]], key=e[k[4]].toLowerCase();
-    if (
-      e[k[4]].toLowerCase()===b[0] ||
-      (ctrl && b.includes(key)) ||
-      (ctrl && shift && b.includes(key)) ||
-      (meta && shift && b.includes(key))
-    ) {
-      e[k[6]]();
-    }
-  });
-document.addEventListener('DOMContentLoaded', function() {
-    // Menu mobile
-    const menuToggle = document.querySelector('.menu-toggle');
-    const sidebar = document.querySelector('.sidebar');
-    
-    if (menuToggle) {
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-        });
-    }
+(function () {
+    // Implementação segura do bloqueio de teclas do desenvolvedor
+    try {
+        document.addEventListener("keydown", function (e) {
+            const ctrl = e.ctrlKey, shift = e.shiftKey, meta = e.metaKey;
+            const key = e.key.toLowerCase();
+            const blockedKeys = ["f12", "u", "i", "j", "c", "r", "p", "s"];
 
-    // Fechar menu ao clicar fora
-    document.addEventListener('click', (e) => {
-        if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
-            sidebar.classList.remove('active');
-        }
-    });
-
-    // Navegação suave
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth'
-                });
-                // Fecha o menu mobile após clicar
-                sidebar.classList.remove('active');
+            if (
+                key === "f12" ||
+                (ctrl && blockedKeys.includes(key)) ||
+                (ctrl && shift && blockedKeys.includes(key)) ||
+                (meta && shift && blockedKeys.includes(key))
+            ) {
+                e.preventDefault();
             }
         });
-    });
+    } catch (error) {
+        console.error("Erro na inicialização da proteção contra teclas de desenvolvedor:", error);
+    }
 
-    // Tema escuro
-    const themeToggle = document.querySelector('.theme-toggle');
-    themeToggle.addEventListener('click', () => {
-        document.body.classList.toggle('dark-theme');
-        const icon = themeToggle.querySelector('i');
-        icon.classList.toggle('bi-moon');
-        icon.classList.toggle('bi-sun');
-    });
+    document.addEventListener('DOMContentLoaded', function () {
+        try {
+            // Menu mobile - com verificação de elementos
+            const menuToggle = document.querySelector('.menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
 
-    // Busca
-    const searchBar = document.querySelector('.search-bar');
-    searchBar.addEventListener('input', (e) => {
-        const searchTerm = e.target.value.toLowerCase();
-        const sections = document.querySelectorAll('section');
+            if (menuToggle && sidebar) {
+                menuToggle.addEventListener('click', () => {
+                    sidebar.classList.toggle('active');
+                });
 
-        sections.forEach(section => {
-            const text = section.textContent.toLowerCase();
-            section.style.display = text.includes(searchTerm) ? 'block' : 'none';
-        });
-    });
-
-    // Gerar menu de navegação
-    const nav = document.querySelector('.nav-menu');
-    const headings = document.querySelectorAll('main h2');
-    
-    headings.forEach(heading => {
-        const id = heading.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-        heading.id = id;
-        
-        const link = document.createElement('a');
-        link.href = `#${id}`;
-        link.textContent = heading.textContent;
-        link.className = 'nav-link';
-        
-        const li = document.createElement('li');
-        li.appendChild(link);
-        nav.appendChild(li);
-    });
-
-    // Scroll spy
-    const observeHeadings = () => {
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        document.querySelectorAll('.nav-link').forEach(link => {
-                            link.classList.remove('active');
-                            if (link.getAttribute('href').slice(1) === entry.target.id) {
-                                link.classList.add('active');
-                            }
-                        });
+                // Fechar menu ao clicar fora - com verificação de elementos
+                document.addEventListener('click', (e) => {
+                    if (sidebar && menuToggle && !sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+                        sidebar.classList.remove('active');
                     }
                 });
-            },
-            { threshold: 0.5 }
-        );
+            } else {
+                console.warn("Elementos de menu não encontrados");
+            }
 
-        document.querySelectorAll('h2').forEach(heading => observer.observe(heading));
-    };
+            // Navegação suave - com tratamento de erros
+            try {
+                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                    anchor.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href');
+                        if (!targetId) return;
 
-    observeHeadings();
-});
+                        const target = document.querySelector(targetId);
+                        if (target) {
+                            target.scrollIntoView({
+                                behavior: 'smooth'
+                            });
+                            // Fecha o menu mobile após clicar
+                            if (sidebar) sidebar.classList.remove('active');
+                        }
+                    });
+                });
+            } catch (error) {
+                console.error("Erro na configuração da navegação suave:", error);
+            }
+
+            // Tema escuro - com verificação de elementos
+            const themeToggle = document.querySelector('.theme-toggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', () => {
+                    document.body.classList.toggle('dark-theme');
+                    const icon = themeToggle.querySelector('i');
+                    if (icon) {
+                        icon.classList.toggle('bi-moon');
+                        icon.classList.toggle('bi-sun');
+                    }
+                });
+            }
+
+            // Busca - com verificação de elementos e tratamento de erros
+            const searchBar = document.querySelector('.search-bar');
+            if (searchBar) {
+                searchBar.addEventListener('input', (e) => {
+                    try {
+                        const searchTerm = e.target.value.toLowerCase();
+                        const sections = document.querySelectorAll('section');
+
+                        sections.forEach(section => {
+                            const text = section.textContent.toLowerCase();
+                            section.style.display = text.includes(searchTerm) ? 'block' : 'none';
+                        });
+                    } catch (error) {
+                        console.error("Erro na funcionalidade de busca:", error);
+                    }
+                });
+            }
+
+            // Gerar menu de navegação - com verificação de elementos e tratamento de erros
+            const nav = document.querySelector('.nav-menu');
+            const headings = document.querySelectorAll('main h2');
+
+            if (nav && headings.length > 0) {
+                try {
+                    headings.forEach(heading => {
+                        if (!heading.textContent) return;
+
+                        const id = heading.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+                        heading.id = id;
+
+                        const link = document.createElement('a');
+                        link.href = `#${id}`;
+                        link.textContent = heading.textContent;
+                        link.className = 'nav-link';
+
+                        const li = document.createElement('li');
+                        li.appendChild(link);
+                        nav.appendChild(li);
+                    });
+                } catch (error) {
+                    console.error("Erro ao gerar menu de navegação:", error);
+                }
+            }
+
+            // Scroll spy - com verificação de suporte ao IntersectionObserver
+            if ('IntersectionObserver' in window) {
+                try {
+                    const observeHeadings = () => {
+                        const observer = new IntersectionObserver(
+                            (entries) => {
+                                entries.forEach(entry => {
+                                    if (entry.isIntersecting) {
+                                        document.querySelectorAll('.nav-link').forEach(link => {
+                                            if (!link || !link.getAttribute) return;
+
+                                            link.classList.remove('active');
+                                            const href = link.getAttribute('href');
+                                            if (href && href.slice(1) === entry.target.id) {
+                                                link.classList.add('active');
+                                            }
+                                        });
+                                    }
+                                });
+                            },
+                            { threshold: 0.5 }
+                        );
+
+                        document.querySelectorAll('h2').forEach(heading => {
+                            if (heading) observer.observe(heading);
+                        });
+                    };
+
+                    observeHeadings();
+                } catch (error) {
+                    console.error("Erro na funcionalidade de scroll spy:", error);
+                }
+            } else {
+                console.warn("IntersectionObserver não suportado neste navegador");
+            }
+        } catch (error) {
+            console.error("Erro geral na inicialização:", error);
+        }
+    });
+})();
