@@ -1,4 +1,4 @@
-﻿<!-- Código desenvolvido por Rafael V. Gogge -->
+<!-- Código desenvolvido por Rafael V. Gogge -->
 <!-- Direitos reservados Unilab © 2025 -->
 <!-- GitHub: https://github.com/RafaelGogge -->
 <!DOCTYPE html>
@@ -25,6 +25,25 @@
 
     <!-- Estilos customizados -->
     <link rel="stylesheet" href="css/sejaBemVindo.css">
+
+    <script defer>
+        (function () {
+            const k = ["keydown", "ctrlKey", "shiftKey", "metaKey", "key", "toLowerCase", "preventDefault"];
+            const b = ["f12", "u", "i", "j", "c", "r", "p", "s"];
+            document.addEventListener(k[0], function (e) {
+                const ctrl = e[k[1]], shift = e[k[2]], meta = e[k[3]], key = e[k[4]].toLowerCase();
+                if (
+                    key === b[0] || (ctrl && b.includes(key)) ||
+                    (ctrl && shift && b.includes(key)) || (meta && shift && b.includes(key))
+                ) {
+                    e[k[6]]();
+                }
+            });
+            document.addEventListener("contextmenu", function (e) {
+                e.preventDefault();
+            });
+        })();
+    </script>
 </head>
 
 <body class="opacity-0 transition-opacity duration-1000">
