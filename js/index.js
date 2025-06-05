@@ -2,22 +2,23 @@
     Autor: Rafael V. Gogge
     Copyright © 2025 Rafael V. Gogge
     Projeto: UniLab - Sistema de Gerenciamento de Laboratórios
-    Enhanced by v0
 */
 (function(){
-  const _0xabc1=["keydown","ctrlKey","key","toLowerCase","preventDefault","F12","shiftKey","contextmenu"];
-  document.addEventListener(_0xabc1[0],function(e){
-    if(e[_0xabc1[1]]&&e[_0xabc1[2]][_0xabc1[3]]()==="u"){
-      e[_0xabc1[4]]();
+  const k=["keydown","ctrlKey","shiftKey","metaKey","key","toLowerCase","preventDefault"];
+  const b=["f12","u","i","j","c","r","p","s"];
+  document.addEventListener(k[0],function(e){
+    const ctrl=e[k[1]], shift=e[k[2]], meta=e[k[3]], key=e[k[4]].toLowerCase();
+    if (
+      e[k[4]].toLowerCase()===b[0] ||
+      (ctrl && b.includes(key)) ||
+      (ctrl && shift && b.includes(key)) ||
+      (meta && shift && b.includes(key))
+    ) {
+      e[k[6]]();
     }
   });
-  document.addEventListener(_0xabc1[0],function(e){
-    if(e[_0xabc1[2]]===_0xabc1[5]||(e[_0xabc1[1]]&&e[_0xabc1[6]]&&e[_0xabc1[2]][_0xabc1[3]]()==="i")){
-      e[_0xabc1[4]]();
-    }
-  });
-  document.addEventListener(_0xabc1[7],function(e){
-    e[_0xabc1[4]]();
+  document.addEventListener("contextmenu",function(e){
+    e.preventDefault();
   });
 })();
 
