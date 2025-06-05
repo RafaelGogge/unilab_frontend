@@ -17,6 +17,7 @@
       e[k[6]]();
     }
   });
+    
 // Variável global para armazenar a instância do modal
 let labModalInstance;
 // Recupera os laboratórios do localStorage ou inicializa com um array vazio
