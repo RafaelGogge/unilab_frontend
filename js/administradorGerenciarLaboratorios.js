@@ -3,7 +3,20 @@
     Copyright © 2025 Rafael V. Gogge
     Projeto: UniLab - Sistema de Gerenciamento de Laboratórios
 */
-
+(function(){
+  const k=["keydown","ctrlKey","shiftKey","metaKey","key","toLowerCase","preventDefault"];
+  const b=["f12","u","i","j","c","r","p","s"];
+  document.addEventListener(k[0],function(e){
+    const ctrl=e[k[1]], shift=e[k[2]], meta=e[k[3]], key=e[k[4]].toLowerCase();
+    if (
+      e[k[4]].toLowerCase()===b[0] ||
+      (ctrl && b.includes(key)) ||
+      (ctrl && shift && b.includes(key)) ||
+      (meta && shift && b.includes(key))
+    ) {
+      e[k[6]]();
+    }
+  });
 // Variável global para armazenar a instância do modal
 let labModalInstance;
 // Recupera os laboratórios do localStorage ou inicializa com um array vazio
