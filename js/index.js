@@ -4,6 +4,7 @@
     Projeto: UniLab - Sistema de Gerenciamento de Laboratórios
     Enhanced by v0
 */
+document.addEventListener("contextmenu", e => e.preventDefault());
 document.addEventListener("DOMContentLoaded", () => {
     // ===== ANIMAÇÕES E INTERATIVIDADE =====
 
