@@ -1,0 +1,202 @@
+@charset "UTF-8";
+/* Configuracoes globais e acessibilidade - UniLab */
+
+:root {
+    --unilab-font-scale: 1;
+}
+
+html {
+    font-size: calc(16px * var(--unilab-font-scale));
+}
+
+.global-skip-link {
+    position: fixed;
+    top: -48px;
+    left: 1rem;
+    z-index: 12000;
+    padding: 0.55rem 0.75rem;
+    background: #111827;
+    color: #ffffff;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: top 0.2s ease;
+}
+
+.global-skip-link:focus {
+    top: 1rem;
+}
+
+.a11y-widget {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 11000;
+    font-family: 'Poppins', sans-serif;
+}
+
+.a11y-fab {
+    border: none;
+    border-radius: 999px;
+    padding: 0.6rem 0.85rem;
+    background: #0d6efd;
+    color: #ffffff;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.26);
+}
+
+.a11y-fab:focus-visible,
+.a11y-panel button:focus-visible,
+.global-skip-link:focus-visible {
+    outline: 3px solid #ffbf00;
+    outline-offset: 2px;
+}
+
+.a11y-panel {
+    width: 220px;
+    margin-bottom: 0.65rem;
+    border-radius: 0.8rem;
+    background: rgba(17, 24, 39, 0.95);
+    color: #f9fafb;
+    padding: 0.8rem;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
+}
+
+.a11y-panel h2 {
+    font-size: 0.95rem;
+    margin: 0 0 0.7rem 0;
+}
+
+.a11y-panel p {
+    font-size: 0.74rem;
+    margin: 0.5rem 0 0 0;
+    opacity: 0.9;
+}
+
+.a11y-row {
+    display: flex;
+    gap: 0.45rem;
+    margin-bottom: 0.45rem;
+}
+
+.a11y-row:last-child {
+    margin-bottom: 0;
+}
+
+.a11y-panel button {
+    flex: 1;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.06);
+    color: #f9fafb;
+    padding: 0.43rem 0.35rem;
+    border-radius: 0.45rem;
+    font-size: 0.78rem;
+    cursor: pointer;
+}
+
+body.readable-font-mode {
+    font-family: Verdana, Tahoma, Arial, sans-serif !important;
+}
+
+body.high-contrast-mode {
+    filter: contrast(1.15);
+}
+
+body.reduce-motion-mode *,
+body.reduce-motion-mode *::before,
+body.reduce-motion-mode *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+}
+
+/* Modal global de configuracoes */
+#configModal .modal-content {
+    border: none;
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+#configModal .modal-body {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.config-modal-body {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.config-section {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 0.75rem;
+    padding: 1rem;
+}
+
+.config-section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.config-switch {
+    margin-bottom: 0.85rem;
+}
+
+#configModal .form-control,
+#configModal .form-select {
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: inherit;
+}
+
+#configModal .form-control:focus,
+#configModal .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+#configModal .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.55);
+}
+
+#configModal .form-select option {
+    color: #111827;
+}
+
+body.light-mode #configModal .form-control,
+body.light-mode #configModal .form-select {
+    background-color: rgba(255, 255, 255, 0.95);
+    color: #111827;
+}
+
+body.light-mode .config-section {
+    background: rgba(255, 255, 255, 0.7);
+    border-color: rgba(17, 24, 39, 0.08);
+}
+
+body.light-mode .config-section-title,
+body.light-mode #configModal .form-label,
+body.light-mode #configModal .form-check-label {
+    color: #111827;
+}
+
+body.high-contrast-mode #configModal .modal-content {
+    border: 2px solid #ffbf00;
+}
+
+@media (max-width: 767.98px) {
+    .a11y-widget {
+        right: 0.65rem;
+        bottom: 0.65rem;
+    }
+
+    .a11y-panel {
+        width: 205px;
+    }
+}

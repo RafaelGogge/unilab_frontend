@@ -4,6 +4,8 @@
     Projeto: UniLab - Sistema de Gerenciamento de Laboratórios
 */
 (function () {
+    const SETTINGS_STORAGE_KEY = 'unilabUserSettings';
+
     // Prevenção de ferramentas de desenvolvedor com tratamento de erros
     try {
         document.addEventListener("keydown", function (e) {
@@ -45,6 +47,112 @@
         } catch (error) {
             console.error("Erro ao abrir modal de configurações:", error);
         }
+    }
+
+    window.openConfigModal = openConfigModal;
+
+    function getDefaultSettings() {
+        return {
+            displayName: '',
+            email: '',
+            language: 'pt-BR',
+            emailNotifications: true,
+            systemAlerts: true,
+            reminders: true,
+            notificationSound: false,
+            darkMode: true,
+            highContrast: false,
+            reduceMotion: false,
+            fontSize: 'normal'
+        };
+    }
+
+    function loadSettings() {
+        try {
+            const raw = localStorage.getItem(SETTINGS_STORAGE_KEY);
+            if (!raw) {
+                return getDefaultSettings();
+            }
+
+            const parsed = JSON.parse(raw);
+            return { ...getDefaultSettings(), ...parsed };
+        } catch (error) {
+            console.error('Erro ao carregar configurações:', error);
+            return getDefaultSettings();
+        }
+    }
+
+    function saveSettings(settings) {
+        try {
+            localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
+            return true;
+        } catch (error) {
+            console.error('Erro ao salvar configurações:', error);
+            return false;
+        }
+    }
+
+    function applyVisualSettings(settings) {
+        try {
+            if (settings.darkMode) {
+                document.body.classList.remove('light-mode');
+            } else {
+                document.body.classList.add('light-mode');
+            }
+
+            document.body.classList.toggle('high-contrast-mode', Boolean(settings.highContrast));
+            document.body.classList.toggle('reduce-motion-mode', Boolean(settings.reduceMotion));
+
+            const validSize = ['normal', 'large', 'x-large'].includes(settings.fontSize)
+                ? settings.fontSize
+                : 'normal';
+            document.body.setAttribute('data-font-size', validSize);
+        } catch (error) {
+            console.error('Erro ao aplicar configurações visuais:', error);
+        }
+    }
+
+    function fillSettingsForm(settings) {
+        const mapping = {
+            configDisplayName: settings.displayName,
+            configEmail: settings.email,
+            languageSelect: settings.language,
+            notificationToggle: settings.emailNotifications,
+            systemAlertToggle: settings.systemAlerts,
+            reminderToggle: settings.reminders,
+            soundToggle: settings.notificationSound,
+            darkModeToggle: settings.darkMode,
+            highContrastToggle: settings.highContrast,
+            reduceMotionToggle: settings.reduceMotion,
+            fontSizeSelect: settings.fontSize
+        };
+
+        Object.keys(mapping).forEach(id => {
+            const element = document.getElementById(id);
+            if (!element) return;
+
+            if (element.type === 'checkbox') {
+                element.checked = Boolean(mapping[id]);
+            } else {
+                element.value = mapping[id];
+            }
+        });
+    }
+
+    function collectSettingsFromForm() {
+        return {
+            displayName: (document.getElementById('configDisplayName')?.value || '').trim(),
+            email: (document.getElementById('configEmail')?.value || '').trim(),
+            language: document.getElementById('languageSelect')?.value || 'pt-BR',
+            emailNotifications: Boolean(document.getElementById('notificationToggle')?.checked),
+            systemAlerts: Boolean(document.getElementById('systemAlertToggle')?.checked),
+            reminders: Boolean(document.getElementById('reminderToggle')?.checked),
+            notificationSound: Boolean(document.getElementById('soundToggle')?.checked),
+            darkMode: Boolean(document.getElementById('darkModeToggle')?.checked),
+            highContrast: Boolean(document.getElementById('highContrastToggle')?.checked),
+            reduceMotion: Boolean(document.getElementById('reduceMotionToggle')?.checked),
+            fontSize: document.getElementById('fontSizeSelect')?.value || 'normal'
+        };
     }
 
     // Função para animar contadores com tratamento de erros
@@ -116,6 +224,11 @@
             const logoutButton = document.querySelector('.logout-button');
             const notificationList = document.querySelector('.notification-list');
             const navbar = document.getElementById('navbar');
+            const saveConfigBtn = document.getElementById('saveConfigBtn');
+            const resetConfigBtn = document.getElementById('resetConfigBtn');
+            const changePasswordBtn = document.getElementById('changePasswordBtn');
+            const configModalElement = document.getElementById('configModal');
+            const userName = localStorage.getItem('userName') || '';
 
             // Verificar elementos críticos
             if (!actionCards || actionCards.length === 0) {
@@ -177,6 +290,16 @@
                 } catch (error) {
                     console.error("Erro ao mostrar feedback:", error);
                 }
+            }
+
+            function initializeSettings() {
+                const settings = loadSettings();
+                if (!settings.displayName && userName) {
+                    settings.displayName = userName;
+                }
+
+                fillSettingsForm(settings);
+                applyVisualSettings(settings);
             }
 
             // Função para verificar autenticação
@@ -259,38 +382,138 @@
             });
 
             // Event Listener para o sino de notificações
-            notificationBell.addEventListener('click', function () {
-                // Marcar notificações como lidas
-                this.querySelector('.notification-badge').style.display = 'none';
-                // Simular carregamento de notificações
-                simulateNotifications();
-            });
+            if (notificationBell) {
+                notificationBell.addEventListener('click', function () {
+                    const badge = this.querySelector('.notification-badge');
+                    if (badge) {
+                        badge.style.display = 'none';
+                    }
+
+                    simulateNotifications();
+                });
+            }
 
             // Event Listener para logout
-            logoutButton.addEventListener('click', function (e) {
-                e.preventDefault();
+            if (logoutButton) {
+                logoutButton.addEventListener('click', function (e) {
+                    e.preventDefault();
 
-                // Efeito de clique
-                this.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    this.style.transform = '';
-                }, 150);
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
 
-                // Mostrar feedback
-                showFeedback('Logout realizado com sucesso. Redirecionando...', 'info');
+                    showFeedback('Logout realizado com sucesso. Redirecionando...', 'info');
 
-                // Limpar dados do usuário
-                setTimeout(() => {
-                    localStorage.removeItem('isAuthenticated');
-                    localStorage.removeItem('userRole');
-                    localStorage.removeItem('userName');
-                    localStorage.removeItem('rememberMe');
-                    localStorage.removeItem('username');
+                    setTimeout(() => {
+                        localStorage.removeItem('isAuthenticated');
+                        localStorage.removeItem('userRole');
+                        localStorage.removeItem('userName');
+                        localStorage.removeItem('rememberMe');
+                        localStorage.removeItem('username');
 
-                    // Redirecionar para página inicial
-                    window.location.href = 'index.html';
-                }, 1500);
-            });
+                        window.location.href = 'index.html';
+                    }, 1500);
+                });
+            }
+
+            if (configModalElement) {
+                configModalElement.addEventListener('show.bs.modal', () => {
+                    fillSettingsForm(loadSettings());
+                });
+            }
+
+            if (saveConfigBtn) {
+                saveConfigBtn.addEventListener('click', () => {
+                    const baseSettings = window.UnilabSettings?.loadSettings
+                        ? window.UnilabSettings.loadSettings()
+                        : loadSettings();
+
+                    const newSettings = {
+                        ...baseSettings,
+                        ...collectSettingsFromForm()
+                    };
+
+                    if (newSettings.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newSettings.email)) {
+                        showFeedback('Informe um email válido para salvar as configurações.', 'warning');
+                        return;
+                    }
+
+                    const saved = window.UnilabSettings?.saveSettings
+                        ? window.UnilabSettings.saveSettings(newSettings)
+                        : saveSettings(newSettings);
+                    if (!saved) {
+                        showFeedback('Não foi possível salvar as configurações.', 'danger');
+                        return;
+                    }
+
+                    if (newSettings.displayName) {
+                        localStorage.setItem('userName', newSettings.displayName);
+                        if (userNameElement) {
+                            userNameElement.textContent = newSettings.displayName;
+                        }
+                    }
+
+                    if (window.UnilabSettings?.applyVisualSettings) {
+                        window.UnilabSettings.applyVisualSettings(newSettings);
+                    } else {
+                        applyVisualSettings(newSettings);
+                    }
+                    showFeedback('Configurações salvas com sucesso!', 'success');
+
+                    const bootstrapRef = window.bootstrap || bootstrap;
+                    const instance = bootstrapRef.Modal.getInstance(configModalElement);
+                    if (instance) {
+                        instance.hide();
+                    }
+                });
+            }
+
+            if (resetConfigBtn) {
+                resetConfigBtn.addEventListener('click', () => {
+                    const defaults = window.UnilabSettings?.getDefaultSettings
+                        ? window.UnilabSettings.getDefaultSettings()
+                        : getDefaultSettings();
+
+                    defaults.displayName = localStorage.getItem('userName') || '';
+                    fillSettingsForm(defaults);
+
+                    if (window.UnilabSettings?.applyVisualSettings) {
+                        window.UnilabSettings.applyVisualSettings(defaults);
+                    } else {
+                        applyVisualSettings(defaults);
+                    }
+
+                    if (window.UnilabSettings?.saveSettings) {
+                        window.UnilabSettings.saveSettings(defaults);
+                    } else {
+                        saveSettings(defaults);
+                    }
+
+                    showFeedback('Configurações restauradas para o padrão.', 'info');
+                });
+            }
+
+            if (changePasswordBtn) {
+                changePasswordBtn.addEventListener('click', () => {
+                    const newPassword = document.getElementById('newPassword')?.value || '';
+                    const confirmPassword = document.getElementById('confirmPassword')?.value || '';
+
+                    if (newPassword.length < 6) {
+                        showFeedback('A nova senha deve ter pelo menos 6 caracteres.', 'warning');
+                        return;
+                    }
+
+                    if (newPassword !== confirmPassword) {
+                        showFeedback('A confirmação da senha não confere.', 'danger');
+                        return;
+                    }
+
+                    showFeedback('Senha atualizada com sucesso!', 'success');
+                    document.getElementById('newPassword').value = '';
+                    document.getElementById('confirmPassword').value = '';
+                });
+            }
 
             // Função para simular notificações
             function simulateNotifications() {
@@ -389,6 +612,8 @@
             if (statsSection) {
                 observer.observe(statsSection);
             }
+
+            initializeSettings();
 
             // Verificar autenticação ao carregar a página
             checkAuth();
