@@ -1,5 +1,5 @@
-﻿<!-- Código desenvolvido por Rafael V. Gogge -->
-<!-- Direitos reservados Unilab © 2025 -->
+<!-- C�digo desenvolvido por Rafael V. Gogge -->
+<!-- Direitos reservados Unilab � 2025 -->
 <!-- GitHub: https://github.com/RafaelGogge -->
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -8,9 +8,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="author" content="Rafael V. Gogge">
-  <meta name="copyright" content="© 2025 Rafael V. Gogge">
-  <meta name="description" content="Sistema de agendamento de laboratórios - UniLab">
-  <title>Agendamento - Laboratório</title>
+  <meta name="copyright" content="� 2025 Rafael V. Gogge">
+  <meta name="description" content="Sistema de agendamento de laborat�rios - UniLab">
+  <title>Agendamento - Laborat�rio</title>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <!-- Bootstrap Icons -->
@@ -22,7 +22,7 @@
   <link rel="stylesheet" href="css/agendamento_lab.css" />
   <!-- Favicon -->
   <link rel="shortcut icon" href="favicon/favicon.ico" type="image/x-icon" />
-  
+
   <script defer>
     (function () {
       const k = ["keydown", "ctrlKey", "shiftKey", "metaKey", "key", "toLowerCase", "preventDefault"];
@@ -41,25 +41,26 @@
       });
     })();
   </script>
+  <link rel="stylesheet" href="css/globalSettings.css">
 </head>
 
 <body class="min-h-screen bg-gradient-to-br from-primary to-secondary text-white">
   <!-- Skip Link para Acessibilidade -->
-  <a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
+  <a href="#main-content" class="skip-link">Pular para o conte�do principal</a>
 
-  <!-- Overlay de Seleção de Laboratório -->
+  <!-- Overlay de Sele��o de Laborat�rio -->
   <div id="labSelectionOverlay" class="lab-selection-overlay opacity-0 translate-y-10">
     <div class="lab-selection-container">
       <div class="lab-selection-header">
         <h2 class="text-center mb-4">
-          <i class="bi bi-building"></i> Selecione um Laboratório
+          <i class="bi bi-building"></i> Selecione um Laborat�rio
         </h2>
         <p class="text-center text-white-70 mb-5">
-          Escolha o laboratório que deseja agendar
+          Escolha o laborat�rio que deseja agendar
         </p>
       </div>
       <div id="labSelectionGrid" class="lab-selection-grid">
-        <!-- Os laboratórios serão carregados aqui via JavaScript -->
+        <!-- Os laborat�rios ser�o carregados aqui via JavaScript -->
       </div>
       <div class="lab-selection-footer mt-4 text-center">
         <button class="btn-voltar" onclick="window.location.href='sejaBemVindo.html';">
@@ -69,31 +70,31 @@
     </div>
   </div>
 
-  <!-- Conteúdo Principal -->
+  <!-- Conte�do Principal -->
   <main id="main-content" class="container py-4 opacity-0">
     <div
       class="login-container bg-white/10 backdrop-blur-md rounded-3xl p-6 md:p-8 shadow-2xl border border-white/10 w-full max-w-4xl">
       <div class="login-title flex items-center gap-4 mb-6 pb-4 border-b border-white/20">
         <button class="btn-voltar" onclick="window.location.href='sejaBemVindo.html';"
-          aria-label="Voltar para a página anterior">
+          aria-label="Voltar para a p�gina anterior">
           <i class="bi bi-arrow-left"></i>
         </button>
-        <span class="text-2xl font-semibold text-white flex-1" id="labTitle">Agendamento: Laboratório</span>
-        <button class="btn-change-lab" onclick="showLabSelectionOverlay()" aria-label="Trocar laboratório">
+        <span class="text-2xl font-semibold text-white flex-1" id="labTitle">Agendamento: Laborat�rio</span>
+        <button class="btn-change-lab" onclick="showLabSelectionOverlay()" aria-label="Trocar laborat�rio">
           <i class="bi bi-shuffle"></i> Trocar
         </button>
       </div>
 
-      <!-- Informações do Laboratório -->
+      <!-- Informa��es do Laborat�rio -->
       <div class="lab-details-container fade-in-element" data-delay="100">
         <h3 class="lab-details-title">
-          <i class="bi bi-info-circle"></i> Informações do Laboratório
+          <i class="bi bi-info-circle"></i> Informa��es do Laborat�rio
         </h3>
         <div class="lab-details-grid">
           <div class="lab-detail-item">
             <i class="bi bi-geo-alt"></i>
             <div class="detail-content">
-              <span class="detail-label">Localização:</span>
+              <span class="detail-label">Localiza��o:</span>
               <span class="detail-value" id="labLocalizacao">Carregando...</span>
             </div>
           </div>
@@ -121,7 +122,7 @@
         </div>
       </div>
 
-      <!-- Formulário de Agendamento -->
+      <!-- Formul�rio de Agendamento -->
       <div class="form-container fade-in-element" data-delay="200">
         <!-- Campo para o Nome do Professor -->
         <div class="form-group">
@@ -130,7 +131,7 @@
           </label>
           <select id="nomeProfessor" class="form-select" required aria-required="true">
             <option value="">Selecione um professor</option>
-            <!-- Os professores serão carregados aqui via JavaScript -->
+            <!-- Os professores ser�o carregados aqui via JavaScript -->
           </select>
         </div>
 
@@ -142,32 +143,32 @@
           <input type="date" id="dataAgendamento" class="form-control" aria-required="true" />
         </div>
 
-        <!-- Botões de Horários -->
+        <!-- Bot�es de Hor�rios -->
         <div class="horarios-container fade-in-element" data-delay="300">
-          <button class="btn-custom" onclick="reservar('19:00 às 20:20')">
-            <i class="bi bi-clock"></i> 19:00 às 20:20
+          <button class="btn-custom" onclick="reservar('19:00 �s 20:20')">
+            <i class="bi bi-clock"></i> 19:00 �s 20:20
           </button>
-          <button class="btn-custom" onclick="reservar('20:50 às 22:00')">
-            <i class="bi bi-clock"></i> 20:50 às 22:00
+          <button class="btn-custom" onclick="reservar('20:50 �s 22:00')">
+            <i class="bi bi-clock"></i> 20:50 �s 22:00
           </button>
-          <button class="btn-custom" onclick="reservar('19:00 às 20:20 e 20:50 às 22:00')">
-            <i class="bi bi-clock-fill"></i> Ambos os Horários
+          <button class="btn-custom" onclick="reservar('19:00 �s 20:20 e 20:50 �s 22:00')">
+            <i class="bi bi-clock-fill"></i> Ambos os Hor�rios
           </button>
         </div>
       </div>
 
-      <!-- Status de Disponibilidade será inserido aqui via JavaScript -->
+      <!-- Status de Disponibilidade ser� inserido aqui via JavaScript -->
 
-      <!-- Ferramentas do Laboratório será inserido aqui via JavaScript -->
+      <!-- Ferramentas do Laborat�rio ser� inserido aqui via JavaScript -->
 
-      <!-- Botões de Ação -->
+      <!-- Bot�es de A��o -->
       <div class="buttons-container fade-in-element" data-delay="500">
-        <!-- Botão para cancelar os agendamentos -->
+        <!-- Bot�o para cancelar os agendamentos -->
         <button id="cancelButton" class="btn-cancel d-none" onclick="abrirModalCancelamento()">
           <i class="bi bi-x-circle"></i> Cancelar Agendamentos
         </button>
 
-        <!-- Botão para voltar -->
+        <!-- Bot�o para voltar -->
         <button class="btn-custom" onclick="window.location.href='sejaBemVindo.html';">
           <i class="bi bi-arrow-left"></i> Voltar
         </button>
@@ -186,7 +187,7 @@
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
         </div>
         <div class="modal-body" id="modalBody">
-          <!-- Lista de agendamentos com checkboxes será inserida aqui -->
+          <!-- Lista de agendamentos com checkboxes ser� inserida aqui -->
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" onclick="cancelarAgendamentosSelecionados()">
@@ -200,7 +201,7 @@
     </div>
   </div>
 
-  <!-- Modal de Confirmação para Novo Agendamento -->
+  <!-- Modal de Confirma��o para Novo Agendamento -->
   <div class="modal fade modal-confirm" id="confirmAgendamentoModal" tabindex="-1"
     aria-labelledby="confirmAgendamentoModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -216,7 +217,7 @@
             <i class="bi bi-check-circle me-2"></i> Sim
           </button>
           <button type="button" class="btn btn-danger" onclick="window.location.href='sejaBemVindo.html';">
-            <i class="bi bi-x-circle me-2"></i> Não
+            <i class="bi bi-x-circle me-2"></i> N�o
           </button>
         </div>
       </div>
@@ -227,6 +228,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Custom JavaScript -->
   <script src="js/agendamento_lab.js" defer></script>
+  <script src="js/globalSettings.js" defer></script>
 </body>
 
 </html>

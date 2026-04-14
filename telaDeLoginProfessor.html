@@ -1,5 +1,5 @@
-﻿<!-- Código desenvolvido por Rafael V. Gogge -->
-<!-- Direitos reservados Unilab © 2025 -->
+<!-- C�digo desenvolvido por Rafael V. Gogge -->
+<!-- Direitos reservados Unilab � 2025 -->
 <!-- GitHub: https://github.com/RafaelGogge -->
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -9,7 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Tela de login do professor do UniLab">
   <meta name="author" content="Rafael V. Gogge">
-  <meta name="copyright" content="© 2025 Rafael V. Gogge">
+  <meta name="copyright" content="� 2025 Rafael V. Gogge">
   <title>Login Professor - UniLab</title>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -42,11 +42,12 @@
     })();
   </script>
 
+  <link rel="stylesheet" href="css/globalSettings.css">
 </head>
 
 <body class="d-flex flex-column min-vh-100">
   <!-- Skip Link para Acessibilidade -->
-  <a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
+  <a href="#main-content" class="skip-link">Pular para o conte�do principal</a>
 
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-light fixed-top">
@@ -61,7 +62,7 @@
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
             <a class="nav-link" href="index.html">
-              <i class="bi bi-house"></i>Início
+              <i class="bi bi-house"></i>In�cio
             </a>
           </li>
           <li class="nav-item">
@@ -74,7 +75,7 @@
     </div>
   </nav>
 
-  <!-- Conteúdo Principal -->
+  <!-- Conte�do Principal -->
   <main id="main-content" class="container py-5">
     <div class="login-container">
       <div class="login-card animate-in">
@@ -89,15 +90,15 @@
         <!-- Feedback Messages -->
         <div id="feedback" class="alert alert-dismissible fade show" style="display: none;" role="alert"></div>
 
-        <!-- Formulário de Login -->
+        <!-- Formul�rio de Login -->
         <form id="loginForm" class="needs-validation animate-form" novalidate>
           <div class="form-floating mb-3 input-group-animate">
-            <input type="text" class="form-control" id="username" name="username" placeholder="Usuário" required>
-            <label for="username">Usuário</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="Usu�rio" required>
+            <label for="username">Usu�rio</label>
             <div class="input-icon">
               <i class="bi bi-person-badge"></i>
             </div>
-            <div class="invalid-feedback">Por favor, insira seu usuário.</div>
+            <div class="invalid-feedback">Por favor, insira seu usu�rio.</div>
           </div>
 
           <div class="form-floating mb-3 input-group-animate">
@@ -137,7 +138,7 @@
     </div>
   </main>
 
-  <!-- Modal de Recuperação de Senha -->
+  <!-- Modal de Recupera��o de Senha -->
   <div class="modal fade" id="recoveryModal" tabindex="-1" aria-labelledby="recoveryModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -146,7 +147,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p>Digite seu e-mail cadastrado para receber as instruções de recuperação de senha.</p>
+          <p>Digite seu e-mail cadastrado para receber as instru��es de recupera��o de senha.</p>
           <form id="recoveryForm">
             <div class="form-floating mb-3 input-group-animate">
               <input type="email" class="form-control" id="recoveryEmail" placeholder="E-mail" required>
@@ -154,7 +155,7 @@
               <div class="input-icon">
                 <i class="bi bi-envelope"></i>
               </div>
-              <div class="invalid-feedback">Por favor, insira um e-mail válido.</div>
+              <div class="invalid-feedback">Por favor, insira um e-mail v�lido.</div>
             </div>
           </form>
         </div>
@@ -195,6 +196,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Custom JavaScript -->
   <script src="js/telaDeLoginProfessor.js" defer></script>
+  <script src="js/globalSettings.js" defer></script>
 </body>
 
 </html>
