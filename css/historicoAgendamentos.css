@@ -233,6 +233,32 @@ body {
     color: #dc3545;
 }
 
+/* Botões */
+.btn {
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 50px;
+    transition: var(--transition);
+    background: var(--accent-color);
+    color: var(--text-color);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary {
+    background: var(--accent-color);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
 /* Botões de Ação */
 .btn-action {
     padding: 0.5rem;
@@ -279,6 +305,15 @@ body {
     border: none;
     border-radius: 15px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+#detalhesModal .modal-content {
+    background: #000000;
+}
+
+#detalhesModal .modal-header,
+#detalhesModal .modal-footer {
+    border-color: rgba(255, 255, 255, 0.12);
 }
 
 .modal-header {

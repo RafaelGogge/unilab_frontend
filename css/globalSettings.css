@@ -28,7 +28,7 @@ html {
 
 .a11y-widget {
     position: fixed;
-    right: 1rem;
+    left: 1rem;
     bottom: 1rem;
     z-index: 11000;
     font-family: 'Poppins', sans-serif;
@@ -37,12 +37,27 @@ html {
 .a11y-fab {
     border: none;
     border-radius: 999px;
-    padding: 0.6rem 0.85rem;
-    background: #0d6efd;
-    color: #ffffff;
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    background: #ffffff;
+    color: #111827;
+    border: 1px solid rgba(17, 24, 39, 0.15);
+    font-size: 1.25rem;
     font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
     cursor: pointer;
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.26);
+}
+
+.a11y-fab-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
 }
 
 .a11y-fab:focus-visible,
@@ -192,7 +207,7 @@ body.high-contrast-mode #configModal .modal-content {
 
 @media (max-width: 767.98px) {
     .a11y-widget {
-        right: 0.65rem;
+        left: 0.65rem;
         bottom: 0.65rem;
     }
 

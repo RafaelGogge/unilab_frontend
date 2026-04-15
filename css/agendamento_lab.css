@@ -1,4 +1,5 @@
 @charset "UTF-8";
+
 /* 
     Autor: Rafael V. Gogge
     Copyright © 2025 Rafael V. Gogge
@@ -592,6 +593,155 @@ body {
     font-weight: 500;
 }
 
+/* ===== AGENDA SEMANAL/MENSAL ===== */
+.agenda-container {
+    background: var(--card-bg);
+    border-radius: var(--border-radius-md);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.agenda-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.agenda-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.agenda-view-switch {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-agenda-view {
+    padding: 0.45rem 0.9rem;
+    font-size: 0.9rem;
+}
+
+.btn-agenda-view:not(.active) {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.btn-agenda-view.active {
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35) inset;
+}
+
+.agenda-filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.form-group-checkbox {
+    display: flex;
+    align-items: flex-end;
+}
+
+.agenda-navigation {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+}
+
+.btn-agenda-nav {
+    padding: 0.45rem 0.75rem;
+    font-size: 0.9rem;
+}
+
+.agenda-current-period {
+    margin-left: 0.3rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.agenda-calendar-container {
+    min-height: 220px;
+}
+
+.agenda-grid {
+    display: grid;
+    gap: 0.65rem;
+}
+
+.agenda-grid-week {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.agenda-grid-month {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.agenda-day-col,
+.agenda-day-cell {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--border-radius-sm);
+    padding: 0.65rem;
+    min-height: 120px;
+}
+
+.agenda-day-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.45rem;
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+.agenda-events {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.agenda-event {
+    background: rgba(13, 110, 253, 0.18);
+    border-left: 3px solid var(--accent-color);
+    border-radius: 0.35rem;
+    padding: 0.4rem 0.45rem;
+    font-size: 0.8rem;
+    line-height: 1.3;
+}
+
+.agenda-event small {
+    display: block;
+    opacity: 0.9;
+}
+
+.agenda-day-cell.outside-month {
+    opacity: 0.45;
+}
+
+.agenda-day-cell.today,
+.agenda-day-col.today {
+    box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.35) inset;
+}
+
+.agenda-empty-state {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px dashed rgba(255, 255, 255, 0.25);
+    border-radius: var(--border-radius-md);
+    padding: 1rem;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.9);
+}
+
 /* ===== FERRAMENTAS DO LABORATÓRIO ===== */
 .lab-info {
     background: var(--card-bg);
@@ -757,6 +907,29 @@ body {
 
     .horarios-container {
         grid-template-columns: 1fr;
+    }
+
+    .agenda-header-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .agenda-view-switch {
+        width: 100%;
+    }
+
+    .agenda-view-switch .btn-agenda-view {
+        flex: 1;
+    }
+
+    .agenda-grid-week,
+    .agenda-grid-month {
+        grid-template-columns: 1fr;
+    }
+
+    .agenda-day-col,
+    .agenda-day-cell {
+        min-height: auto;
     }
 
     .ferramentas-grid {
