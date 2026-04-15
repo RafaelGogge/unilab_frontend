@@ -311,7 +311,7 @@
         const wrapper = document.createElement('div');
         wrapper.className = 'a11y-widget';
         wrapper.innerHTML = '' +
-            '<button class="a11y-fab" type="button" aria-expanded="false" aria-controls="a11yPanel">A11Y</button>' +
+            '<button class="a11y-fab" type="button" aria-label="Abrir painel de acessibilidade" aria-expanded="false" aria-controls="a11yPanel" title="Acessibilidade"><img src="imagens/acessibilidade.png" alt="" class="a11y-fab-icon" aria-hidden="true"></button>' +
             '<section class="a11y-panel" id="a11yPanel" aria-label="Acessibilidade" hidden>' +
             '  <h2>Acessibilidade</h2>' +
             '  <div class="a11y-row">' +

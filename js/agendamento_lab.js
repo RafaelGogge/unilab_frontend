@@ -40,6 +40,19 @@ let agendamentos = [];
 let labGlobal = null;
 let laboratorios = [];
 
+const agendaState = {
+    initialized: false,
+    viewMode: 'week',
+    referenceDate: new Date()
+};
+
+const AGENDA_MONTHS_PT = [
+    'janeiro', 'fevereiro', 'marco', 'abril', 'maio', 'junho',
+    'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
+];
+
+const AGENDA_WEEKDAY_LABELS = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom'];
+
 // Inicialização quando o DOM estiver carregado
 document.addEventListener("DOMContentLoaded", inicializarAplicacao);
 
@@ -354,6 +367,15 @@ function selecionarLaboratorio(labId) {
         // Atualizar status
         atualizarStatus();
 
+        // Atualizar agenda semanal/mensal
+        initAgendaCalendar();
+        populateAgendaFilters();
+        const labFilter = document.getElementById('agendaLabFilter');
+        if (labFilter) {
+            labFilter.value = String(labId);
+        }
+        renderAgendaCalendar();
+
         // Carregar ferramentas
         carregarFerramentasLaboratorio(labId);
 
@@ -655,6 +677,362 @@ function atualizarStatus() {
     // Inserir o container de status após os botões de horário
     const formContainer = document.querySelector('.form-container');
     formContainer.insertAdjacentElement('afterend', statusContainer);
+
+    renderAgendaCalendar();
+}
+
+function initAgendaCalendar() {
+    if (agendaState.initialized) {
+        return;
+    }
+
+    const controls = [
+        'viewWeekBtn', 'viewMonthBtn', 'agendaPrevBtn', 'agendaNextBtn',
+        'agendaTodayBtn', 'agendaLabFilter', 'agendaProfessorFilter',
+        'agendaStatusFilter', 'agendaStartDate', 'agendaEndDate', 'agendaMineOnly'
+    ];
+
+    const allControlsExist = controls.every(id => document.getElementById(id));
+    if (!allControlsExist) {
+        return;
+    }
+
+    document.getElementById('viewWeekBtn').addEventListener('click', () => {
+        agendaState.viewMode = 'week';
+        toggleAgendaViewButtons();
+        renderAgendaCalendar();
+    });
+
+    document.getElementById('viewMonthBtn').addEventListener('click', () => {
+        agendaState.viewMode = 'month';
+        toggleAgendaViewButtons();
+        renderAgendaCalendar();
+    });
+
+    document.getElementById('agendaPrevBtn').addEventListener('click', () => {
+        const current = new Date(agendaState.referenceDate);
+        if (agendaState.viewMode === 'week') {
+            current.setDate(current.getDate() - 7);
+        } else {
+            current.setMonth(current.getMonth() - 1);
+        }
+        agendaState.referenceDate = current;
+        renderAgendaCalendar();
+    });
+
+    document.getElementById('agendaNextBtn').addEventListener('click', () => {
+        const current = new Date(agendaState.referenceDate);
+        if (agendaState.viewMode === 'week') {
+            current.setDate(current.getDate() + 7);
+        } else {
+            current.setMonth(current.getMonth() + 1);
+        }
+        agendaState.referenceDate = current;
+        renderAgendaCalendar();
+    });
+
+    document.getElementById('agendaTodayBtn').addEventListener('click', () => {
+        agendaState.referenceDate = new Date();
+        renderAgendaCalendar();
+    });
+
+    ['agendaLabFilter', 'agendaProfessorFilter', 'agendaStatusFilter', 'agendaStartDate', 'agendaEndDate', 'agendaMineOnly']
+        .forEach(id => {
+            const element = document.getElementById(id);
+            element.addEventListener('change', renderAgendaCalendar);
+            element.addEventListener('input', renderAgendaCalendar);
+        });
+
+    const userRole = (localStorage.getItem('userRole') || '').toLowerCase();
+    const mineOnly = document.getElementById('agendaMineOnly');
+    if (mineOnly && userRole === 'professor') {
+        mineOnly.checked = true;
+    }
+
+    agendaState.initialized = true;
+    toggleAgendaViewButtons();
+}
+
+function toggleAgendaViewButtons() {
+    const weekBtn = document.getElementById('viewWeekBtn');
+    const monthBtn = document.getElementById('viewMonthBtn');
+
+    if (!weekBtn || !monthBtn) {
+        return;
+    }
+
+    weekBtn.classList.toggle('active', agendaState.viewMode === 'week');
+    monthBtn.classList.toggle('active', agendaState.viewMode === 'month');
+}
+
+function populateAgendaFilters() {
+    const labFilter = document.getElementById('agendaLabFilter');
+    const professorFilter = document.getElementById('agendaProfessorFilter');
+
+    if (!labFilter || !professorFilter) {
+        return;
+    }
+
+    const previousLab = labFilter.value;
+    const previousProfessor = professorFilter.value;
+
+    const labsData = JSON.parse(localStorage.getItem(STORAGE_KEYS.LABORATORIOS)) || [];
+    const professoresData = JSON.parse(localStorage.getItem(STORAGE_KEYS.PROFESSORES)) || [];
+
+    labFilter.innerHTML = '<option value="">Todos os laboratorios</option>';
+    labsData.forEach(lab => {
+        const option = document.createElement('option');
+        option.value = String(lab.id);
+        option.textContent = lab.nome;
+        labFilter.appendChild(option);
+    });
+
+    const professorNames = new Set(professoresData.map(p => (p.nome || '').trim()).filter(Boolean));
+    collectAllAgendaBookings().forEach(item => {
+        if (item.professor) {
+            professorNames.add(item.professor);
+        }
+    });
+
+    professorFilter.innerHTML = '<option value="">Todos os professores</option>';
+    Array.from(professorNames).sort((a, b) => a.localeCompare(b)).forEach(nome => {
+        const option = document.createElement('option');
+        option.value = nome;
+        option.textContent = nome;
+        professorFilter.appendChild(option);
+    });
+
+    if (previousLab && Array.from(labFilter.options).some(opt => opt.value === previousLab)) {
+        labFilter.value = previousLab;
+    }
+
+    if (previousProfessor && Array.from(professorFilter.options).some(opt => opt.value === previousProfessor)) {
+        professorFilter.value = previousProfessor;
+    }
+}
+
+function collectAllAgendaBookings() {
+    const labsData = JSON.parse(localStorage.getItem(STORAGE_KEYS.LABORATORIOS)) || [];
+    const bookings = [];
+
+    labsData.forEach(lab => {
+        const key = STORAGE_KEYS.LAB_AGENDAMENTOS(lab.id);
+        const labBookings = JSON.parse(localStorage.getItem(key)) || [];
+
+        labBookings.forEach(item => {
+            bookings.push({
+                ...item,
+                labId: String(lab.id),
+                laboratorio: item.laboratorio || lab.nome,
+                status: item.status || 'confirmado'
+            });
+        });
+    });
+
+    bookings.sort((a, b) => {
+        const da = new Date(a.data);
+        const db = new Date(b.data);
+        return da - db;
+    });
+
+    return bookings;
+}
+
+function getFilteredAgendaBookings() {
+    const labFilter = document.getElementById('agendaLabFilter')?.value || '';
+    const professorFilter = document.getElementById('agendaProfessorFilter')?.value || '';
+    const statusFilter = document.getElementById('agendaStatusFilter')?.value || '';
+    const startDate = document.getElementById('agendaStartDate')?.value || '';
+    const endDate = document.getElementById('agendaEndDate')?.value || '';
+    const mineOnly = document.getElementById('agendaMineOnly')?.checked || false;
+
+    const loggedUser = (localStorage.getItem('userName') || '').trim().toLowerCase();
+
+    return collectAllAgendaBookings().filter(item => {
+        if (labFilter && String(item.labId) !== String(labFilter)) {
+            return false;
+        }
+
+        if (professorFilter && item.professor !== professorFilter) {
+            return false;
+        }
+
+        if (statusFilter && (item.status || 'confirmado') !== statusFilter) {
+            return false;
+        }
+
+        if (startDate && item.data < startDate) {
+            return false;
+        }
+
+        if (endDate && item.data > endDate) {
+            return false;
+        }
+
+        if (mineOnly && loggedUser) {
+            const professorName = (item.professor || '').trim().toLowerCase();
+            if (professorName !== loggedUser) {
+                return false;
+            }
+        }
+
+        return true;
+    });
+}
+
+function renderAgendaCalendar() {
+    const container = document.getElementById('agendaCalendarContainer');
+    const periodLabel = document.getElementById('agendaCurrentPeriod');
+
+    if (!container || !periodLabel) {
+        return;
+    }
+
+    const filtered = getFilteredAgendaBookings();
+    const ref = new Date(agendaState.referenceDate);
+
+    if (agendaState.viewMode === 'week') {
+        const weekStart = getWeekStart(ref);
+        const weekEnd = new Date(weekStart);
+        weekEnd.setDate(weekStart.getDate() + 6);
+        periodLabel.textContent = `${formatDateLabel(weekStart)} - ${formatDateLabel(weekEnd)}`;
+        renderWeekAgenda(container, filtered, weekStart);
+        return;
+    }
+
+    periodLabel.textContent = `${AGENDA_MONTHS_PT[ref.getMonth()]} de ${ref.getFullYear()}`;
+    renderMonthAgenda(container, filtered, ref);
+}
+
+function renderWeekAgenda(container, bookings, weekStart) {
+    const bookingByDate = new Map();
+
+    bookings.forEach(item => {
+        if (!bookingByDate.has(item.data)) {
+            bookingByDate.set(item.data, []);
+        }
+        bookingByDate.get(item.data).push(item);
+    });
+
+    const columns = [];
+    const today = toISODate(new Date());
+
+    for (let i = 0; i < 7; i++) {
+        const day = new Date(weekStart);
+        day.setDate(weekStart.getDate() + i);
+        const dayIso = toISODate(day);
+        const events = bookingByDate.get(dayIso) || [];
+
+        columns.push(`
+            <article class="agenda-day-col ${dayIso === today ? 'today' : ''}">
+                <div class="agenda-day-head">
+                    <strong>${AGENDA_WEEKDAY_LABELS[i]}</strong>
+                    <span>${String(day.getDate()).padStart(2, '0')}/${String(day.getMonth() + 1).padStart(2, '0')}</span>
+                </div>
+                <div class="agenda-events">
+                    ${events.length ? events.map(renderAgendaEventCard).join('') : '<div class="agenda-event"><small>Sem reservas</small></div>'}
+                </div>
+            </article>
+        `);
+    }
+
+    container.innerHTML = `<div class="agenda-grid agenda-grid-week">${columns.join('')}</div>`;
+}
+
+function renderMonthAgenda(container, bookings, refDate) {
+    const firstMonthDay = new Date(refDate.getFullYear(), refDate.getMonth(), 1);
+    const lastMonthDay = new Date(refDate.getFullYear(), refDate.getMonth() + 1, 0);
+    const gridStart = getWeekStart(firstMonthDay);
+    const gridEnd = getWeekEnd(lastMonthDay);
+    const bookingByDate = new Map();
+    const today = toISODate(new Date());
+
+    bookings.forEach(item => {
+        if (!bookingByDate.has(item.data)) {
+            bookingByDate.set(item.data, []);
+        }
+        bookingByDate.get(item.data).push(item);
+    });
+
+    const cells = [];
+    for (let day = new Date(gridStart); day <= gridEnd; day.setDate(day.getDate() + 1)) {
+        const current = new Date(day);
+        const dayIso = toISODate(current);
+        const events = bookingByDate.get(dayIso) || [];
+        const outsideMonth = current.getMonth() !== refDate.getMonth();
+        const preview = events.slice(0, 2).map(renderAgendaEventCard).join('');
+        const remaining = events.length > 2 ? `<div class="agenda-event"><small>+${events.length - 2} reserva(s)</small></div>` : '';
+
+        cells.push(`
+            <article class="agenda-day-cell ${outsideMonth ? 'outside-month' : ''} ${dayIso === today ? 'today' : ''}">
+                <div class="agenda-day-head">
+                    <strong>${String(current.getDate()).padStart(2, '0')}</strong>
+                    <span>${events.length} reserva(s)</span>
+                </div>
+                <div class="agenda-events">
+                    ${events.length ? `${preview}${remaining}` : '<div class="agenda-event"><small>Sem reservas</small></div>'}
+                </div>
+            </article>
+        `);
+    }
+
+    container.innerHTML = `
+        <div class="agenda-grid agenda-grid-month">
+            ${cells.join('')}
+        </div>
+    `;
+}
+
+function renderAgendaEventCard(event) {
+    const safeProfessor = escapeHtml(event.professor || 'Nao informado');
+    const safeHorario = escapeHtml(event.horario || 'Horario nao informado');
+    const safeLab = escapeHtml(event.laboratorio || 'Laboratorio');
+    const safeStatus = escapeHtml(event.status || 'confirmado');
+
+    return `
+        <div class="agenda-event">
+            <strong>${safeHorario}</strong>
+            <small>${safeProfessor}</small>
+            <small>${safeLab} - ${safeStatus}</small>
+        </div>
+    `;
+}
+
+function getWeekStart(date) {
+    const d = new Date(date);
+    const day = d.getDay();
+    const diff = day === 0 ? -6 : 1 - day;
+    d.setDate(d.getDate() + diff);
+    d.setHours(0, 0, 0, 0);
+    return d;
+}
+
+function getWeekEnd(date) {
+    const start = getWeekStart(date);
+    const end = new Date(start);
+    end.setDate(start.getDate() + 6);
+    end.setHours(23, 59, 59, 999);
+    return end;
+}
+
+function toISODate(date) {
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+}
+
+function formatDateLabel(date) {
+    return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}`;
+}
+
+function escapeHtml(value) {
+    return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
 }
 
 // --- INTEGRAÇÃO: Histórico e Notificações ---
@@ -917,6 +1295,8 @@ async function reservar(horario) {
             mostrarMensagem(`Reserva confirmada!\nProfessor: ${nomeProfessor}\nData: ${formatarData(dataAgendamento)}\nHorário: ${horario}`, "success");
             atualizarStatus();
             showConfirmAgendamento();
+            populateAgendaFilters();
+            renderAgendaCalendar();
 
             // Atualizar informações do laboratório
             atualizarInformacoesLaboratorio(labGlobal);
@@ -998,6 +1378,8 @@ async function cancelarAgendamentosSelecionados() {
         const modal = bootstrap.Modal.getInstance(document.getElementById("cancelModal"));
         modal.hide();
         atualizarStatus();
+        populateAgendaFilters();
+        renderAgendaCalendar();
 
         // Atualizar informações do laboratório
         atualizarInformacoesLaboratorio(labGlobal);
