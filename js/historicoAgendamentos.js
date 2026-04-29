@@ -111,7 +111,7 @@
             }
 
             // Referência segura ao Bootstrap
-            const bootstrapRef = window.bootstrap || bootstrap || {};
+            const bootstrapRef = window.bootstrap || (typeof bootstrap !== 'undefined' ? bootstrap : {});
 
             // Configurar filtro de entrada
             const filterInput = document.getElementById("filterInput");
@@ -130,6 +130,41 @@
             const userDropdown = document.getElementById('userDropdown');
             const logoutButton = document.querySelector('.logout-button');
             const detalhesModal = document.getElementById('detalhesModal');
+            const AGENDAMENTOS_STORAGE_KEY = 'agendamentosTabelaData';
+            const agendamentosIniciais = [
+                {
+                    id: 1,
+                    data: '2024-03-20',
+                    horario: '08:00 - 10:00',
+                    laboratorio: 'Laboratório de Informática 1',
+                    professor: 'Prof. João Silva',
+                    status: 'confirmado',
+                    descricao: 'Aula de Programação Web',
+                    observacoes: 'Necessário acesso à internet'
+                },
+                {
+                    id: 2,
+                    data: '2024-03-21',
+                    horario: '14:00 - 16:00',
+                    laboratorio: 'Laboratório de Química',
+                    professor: 'Prof. Maria Santos',
+                    status: 'pendente',
+                    descricao: 'Prática de laboratório',
+                    observacoes: 'Trazer equipamentos de proteção'
+                },
+                {
+                    id: 3,
+                    data: '2024-03-22',
+                    horario: '10:00 - 12:00',
+                    laboratorio: 'Laboratório de Física',
+                    professor: 'Prof. Pedro Oliveira',
+                    status: 'cancelado',
+                    descricao: 'Experimento de mecânica',
+                    observacoes: 'Aguardando reagendamento'
+                }
+            ];
+            let agendamentosData = getAgendamentosSalvos();
+            let activeFilters = {};
 
             // Verificar elementos críticos
             if (!agendamentosTable) {
@@ -147,10 +182,20 @@
             // Event Listeners com verificação de existência
             if (filterForm) {
                 filterForm.addEventListener('submit', handleFilter);
+                filterForm.addEventListener('reset', function () {
+                    setTimeout(function () {
+                        activeFilters = {};
+                        loadAgendamentos();
+                    }, 0);
+                });
             }
 
             if (logoutButton) {
                 logoutButton.addEventListener('click', handleLogout);
+            }
+
+            if (agendamentosTable) {
+                agendamentosTable.addEventListener('click', handleActionClick);
             }
 
             // Função para verificar autenticação
@@ -201,7 +246,7 @@
 
                 laboratorios.forEach(lab => {
                     const option = document.createElement('option');
-                    option.value = lab.id;
+                    option.value = lab.nome;
                     option.textContent = lab.nome;
                     laboratorioSelect.appendChild(option);
                 });
@@ -209,39 +254,11 @@
 
             // Função para carregar agendamentos
             function loadAgendamentos(filters = {}) {
-                // Simular dados de agendamentos (substituir por chamada à API)
-                const agendamentos = [
-                    {
-                        id: 1,
-                        data: '2024-03-20',
-                        horario: '08:00 - 10:00',
-                        laboratorio: 'Laboratório de Informática 1',
-                        professor: 'Prof. João Silva',
-                        status: 'confirmado'
-                    },
-                    {
-                        id: 2,
-                        data: '2024-03-21',
-                        horario: '14:00 - 16:00',
-                        laboratorio: 'Laboratório de Química',
-                        professor: 'Prof. Maria Santos',
-                        status: 'pendente'
-                    },
-                    {
-                        id: 3,
-                        data: '2024-03-22',
-                        horario: '10:00 - 12:00',
-                        laboratorio: 'Laboratório de Física',
-                        professor: 'Prof. Pedro Oliveira',
-                        status: 'cancelado'
-                    }
-                ];
-
                 // Limpar tabela
                 agendamentosTable.innerHTML = '';
 
                 // Filtrar agendamentos
-                const filteredAgendamentos = filterAgendamentos(agendamentos, filters);
+                const filteredAgendamentos = filterAgendamentos(agendamentosData, filters);
 
                 // Renderizar agendamentos
                 filteredAgendamentos.forEach(agendamento => {
@@ -252,18 +269,12 @@
                     <td>${agendamento.laboratorio}</td>
                     <td>${agendamento.professor}</td>
                     <td><span class="status-badge status-${agendamento.status}">${formatStatus(agendamento.status)}</span></td>
-                    <td>
-                        <button class="btn-action" onclick="showDetalhes(${agendamento.id})" title="Ver detalhes">
+                    <td class="actions-cell">
+                        <button type="button" class="btn-action btn-view" data-action="view" data-id="${agendamento.id}" title="Visualizar informações" aria-label="Visualizar informações">
                             <i class="bi bi-eye"></i>
                         </button>
-                        ${agendamento.status === 'pendente' ? `
-                            <button class="btn-action" onclick="cancelarAgendamento(${agendamento.id})" title="Cancelar">
-                                <i class="bi bi-x-circle"></i>
-                            </button>
-                        ` : ''}
-
-                        <button class="btn-action" onclick="baixarRelatorio(${agendamento.id})" title="Baixar Relatório">
-                            <i class="bi bi-file-earmark-download"></i>
+                        <button type="button" class="btn-action btn-delete" data-action="delete" data-id="${agendamento.id}" title="Excluir agendamento" aria-label="Excluir agendamento">
+                            <i class="bi bi-x-lg"></i>
                         </button>
                     </td>
                 `;
@@ -313,14 +324,14 @@
             function handleFilter(e) {
                 e.preventDefault();
 
-                const filters = {
+                activeFilters = {
                     dataInicio: document.getElementById('dataInicio').value,
                     dataFim: document.getElementById('dataFim').value,
                     laboratorio: document.getElementById('laboratorio').value,
                     status: document.getElementById('status').value
                 };
 
-                loadAgendamentos(filters);
+                loadAgendamentos(activeFilters);
             }
 
             // Handler para logout
@@ -329,25 +340,63 @@
                 window.location.href = 'index.html';
             }
 
-            // Implementar funções globais de forma mais segura
-            window.showDetalhes = function (id) {
+            function getAgendamentosSalvos() {
+                try {
+                    const dadosSalvos = localStorage.getItem(AGENDAMENTOS_STORAGE_KEY);
+                    if (!dadosSalvos) return [...agendamentosIniciais];
+                    const parsed = JSON.parse(dadosSalvos);
+                    return Array.isArray(parsed) ? parsed : [...agendamentosIniciais];
+                } catch (error) {
+                    console.error("Erro ao carregar agendamentos salvos:", error);
+                    return [...agendamentosIniciais];
+                }
+            }
+
+            function salvarAgendamentos() {
+                try {
+                    localStorage.setItem(AGENDAMENTOS_STORAGE_KEY, JSON.stringify(agendamentosData));
+                } catch (error) {
+                    console.error("Erro ao salvar agendamentos:", error);
+                }
+            }
+
+            function findAgendamentoById(id) {
+                return agendamentosData.find(item => item.id === id);
+            }
+
+            function handleActionClick(e) {
+                const actionButton = e.target.closest('button[data-action]');
+                if (!actionButton) return;
+
+                const action = actionButton.dataset.action;
+                const id = Number(actionButton.dataset.id);
+
+                if (!Number.isInteger(id)) return;
+
+                if (action === 'view') {
+                    showDetalhes(id);
+                    return;
+                }
+
+                if (action === 'delete') {
+                    cancelarAgendamento(id);
+                    return;
+                }
+
+            }
+
+            function showDetalhes(id) {
                 try {
                     if (!detalhesModal) {
                         console.error("Modal de detalhes não encontrado!");
                         return;
                     }
 
-                    // Simular dados do agendamento (substituir por chamada à API)
-                    const agendamento = {
-                        id: id,
-                        data: '2024-03-20',
-                        horario: '08:00 - 10:00',
-                        laboratorio: 'Laboratório de Informática 1',
-                        professor: 'Prof. João Silva',
-                        status: 'confirmado',
-                        descricao: 'Aula de Programação Web',
-                        observacoes: 'Necessário acesso à internet'
-                    };
+                    const agendamento = findAgendamentoById(id);
+                    if (!agendamento) {
+                        showFeedback("Agendamento não encontrado.", "warning");
+                        return;
+                    }
 
                     const detalhesContent = document.querySelector('.detalhes-content');
                     detalhesContent.innerHTML = `
@@ -395,20 +444,33 @@
                     console.error("Erro ao mostrar detalhes:", error);
                     showFeedback("Erro ao mostrar detalhes. Tente novamente.", "danger");
                 }
-            };
+            }
 
-            window.cancelarAgendamento = function (id) {
+            function cancelarAgendamento(id) {
                 try {
-                    if (confirm('Tem certeza que deseja cancelar este agendamento?')) {
-                        // Simulação com tratamento de erro
-                        showFeedback('Agendamento cancelado com sucesso!', 'success');
-                        loadAgendamentos();
+                    const agendamento = findAgendamentoById(id);
+                    if (!agendamento) {
+                        showFeedback("Agendamento não encontrado.", "warning");
+                        return;
                     }
+
+                    if (!confirm(`Deseja realmente excluir o agendamento de ${agendamento.professor}?`)) {
+                        return;
+                    }
+
+                    agendamentosData = agendamentosData.filter(item => item.id !== id);
+                    salvarAgendamentos();
+                    loadAgendamentos(activeFilters);
+                    showFeedback('Agendamento excluído com sucesso!', 'success');
                 } catch (error) {
                     console.error("Erro ao cancelar agendamento:", error);
-                    showFeedback("Erro ao cancelar agendamento. Tente novamente.", "danger");
+                    showFeedback("Erro ao excluir agendamento. Tente novamente.", "danger");
                 }
-            };
+            }
+
+            // Compatibilidade com handlers inline legados
+            window.showDetalhes = showDetalhes;
+            window.cancelarAgendamento = cancelarAgendamento;
 
             // Função para mostrar feedback com tratamento de erro
             function showFeedback(message, type = 'success') {

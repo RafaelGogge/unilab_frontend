@@ -385,8 +385,9 @@ function selecionarLaboratorio(labId) {
         // Garantir que o overlay seja escondido
         hideLabSelectionOverlay();
 
-        // Mostrar uma mensagem de sucesso para confirmar ao usuário
-        mostrarMensagem(`Laboratório ${labGlobal.nome} selecionado com sucesso!`, 'success');
+        // Mostrar uma mensagem de sucesso sem duplicar o prefixo "Laboratório"
+        const nomeLaboratorio = String(labGlobal.nome || '').replace(/^Laborat[oó]rio\s+/i, '').trim();
+        mostrarMensagem(`Laboratório ${nomeLaboratorio || 'selecionado'} selecionado com sucesso!`, 'success');
 
     } catch (error) {
         console.error("Erro ao selecionar laboratório:", error);
@@ -430,6 +431,7 @@ function getLabIcon(tipo) {
     const icons = {
         'Informática': 'bi-pc-display',
         'Química': 'bi-flask',
+        'Quimica': 'bi-flask',
         'Física': 'bi-lightning',
         'Biologia': 'bi-virus',
         'Robótica': 'bi-robot',
