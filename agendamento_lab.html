@@ -1,4 +1,4 @@
-﻿Rafael<!-- CÁ³digo desenvolvido por Rafael V. Gogge -->
+﻿<!-- Código desenvolvido por Rafael V. Gogge -->
 <!-- Direitos reservados Unilab  2025 -->
 <!-- GitHub: https://github.com/RafaelGogge -->
 <!DOCTYPE html>
@@ -9,8 +9,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="author" content="Rafael V. Gogge">
   <meta name="copyright" content=" 2025 Rafael V. Gogge">
-  <meta name="description" content="Sistema de agendamento de laboratÁ³rios - UniLab">
-  <title>Agendamento - LaboratÁ³rio</title>
+  <meta name="description" content="Sistema de agendamento de laboratórios - UniLab">
+  <title>Agendamento - Laboratório</title>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <!-- Bootstrap Icons -->
@@ -46,21 +46,21 @@
 
 <body class="min-h-screen bg-gradient-to-br from-primary to-secondary text-white">
   <!-- Skip Link para Acessibilidade -->
-  <a href="#main-content" class="skip-link">Pular para o conteÁºdo principal</a>
+  <a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
 
-  <!-- Overlay de Seleo de LaboratÁ³rio -->
+  <!-- Overlay de Seleção de Laboratório -->
   <div id="labSelectionOverlay" class="lab-selection-overlay opacity-0 translate-y-10">
     <div class="lab-selection-container">
       <div class="lab-selection-header">
         <h2 class="text-center mb-4">
-          <i class="bi bi-building"></i> Selecione um LaboratÁ³rio
+          <i class="bi bi-building"></i> Selecione um Laboratório
         </h2>
         <p class="text-center text-white-70 mb-5">
-          Escolha o laboratÁ³rio que deseja agendar
+          Escolha o laboratório que deseja agendar
         </p>
       </div>
       <div id="labSelectionGrid" class="lab-selection-grid">
-        <!-- Os laboratÁ³rios sero carregados aqui via JavaScript -->
+        <!-- Os laboratórios serão carregados aqui via JavaScript -->
       </div>
       <div class="lab-selection-footer mt-4 text-center">
         <button class="btn-voltar" onclick="window.location.href='sejaBemVindo.html';">
@@ -79,22 +79,22 @@
           aria-label="Voltar para a pgina anterior">
           <i class="bi bi-arrow-left"></i>
         </button>
-        <span class="text-2xl font-semibold text-white flex-1" id="labTitle">Agendamento: LaboratÁ³rio</span>
-        <button class="btn-change-lab" onclick="showLabSelectionOverlay()" aria-label="Trocar laboratÁ³rio">
+        <span class="text-2xl font-semibold text-white flex-1" id="labTitle">Agendamento: Laboratório</span>
+        <button class="btn-change-lab" onclick="showLabSelectionOverlay()" aria-label="Trocar laboratório">
           <i class="bi bi-shuffle"></i> Trocar
         </button>
       </div>
 
-      <!-- InformaÁƒ§Áƒµes do LaboratÁ³rio -->
+      <!-- Informações do Laboratório -->
       <div class="lab-details-container fade-in-element" data-delay="100">
         <h3 class="lab-details-title">
-          <i class="bi bi-info-circle"></i> InformaÁƒ§Áƒµes do LaboratÁ³rio
+          <i class="bi bi-info-circle"></i> Informações do Laboratório
         </h3>
         <div class="lab-details-grid">
           <div class="lab-detail-item">
             <i class="bi bi-geo-alt"></i>
             <div class="detail-content">
-              <span class="detail-label">Localizao:</span>
+              <span class="detail-label">Localização:</span>
               <span class="detail-value" id="labLocalizacao">Carregando...</span>
             </div>
           </div>
@@ -122,16 +122,16 @@
         </div>
       </div>
 
-      <!-- FormulÁ¡rio de Agendamento -->
+      <!-- Formulí¡rio de Agendamento -->
       <div class="form-container fade-in-element" data-delay="200">
-        <!-- Campo para o NÁƒ£ome do Professor -->
+        <!-- Campo para o Nome do Professor -->
         <div class="form-group">
           <label for="nomeProfessor" class="form-label">
             <i class="bi bi-person-badge"></i> Professor:
           </label>
           <select id="nomeProfessor" class="form-select" required aria-required="true">
             <option value="">Selecione um professor</option>
-            <!-- Os professores sero carregados aqui via JavaScript -->
+            <!-- Os professores serão carregados aqui via JavaScript -->
           </select>
         </div>
 
@@ -143,7 +143,7 @@
           <input type="date" id="dataAgendamento" class="form-control" aria-required="true" />
         </div>
 
-        <!-- Botões de Horários -->
+        <!-- Botões de Horírios -->
         <div class="horarios-container fade-in-element" data-delay="300">
           <button class="btn-custom" onclick="reservar('19:00 s 20:20')">
             <i class="bi bi-clock"></i> 19:00 s 20:20
@@ -152,12 +152,12 @@
             <i class="bi bi-clock"></i> 20:50 s 22:00
           </button>
           <button class="btn-custom" onclick="reservar('19:00 s 20:20 e 20:50 s 22:00')">
-            <i class="bi bi-clock-fill"></i> Ambos os Horários
+            <i class="bi bi-clock-fill"></i> Ambos os Horírios
           </button>
         </div>
       </div>
 
-      <!-- Status de Disponibilidade ser inserido aqui via JavaScript -->
+      <!-- Status de Disponibilidade serí inserido aqui via JavaScript -->
 
       <!-- Agenda semanal/mensal -->
       <section class="agenda-container fade-in-element" data-delay="450" aria-label="Agenda de reservas">
@@ -228,16 +228,16 @@
         <div id="agendaCalendarContainer" class="agenda-calendar-container" aria-live="polite"></div>
       </section>
 
-      <!-- Ferramentas do LaboratÁ³rio ser inserido aqui via JavaScript -->
+      <!-- Ferramentas do Laboratório serí inserido aqui via JavaScript -->
 
       <!-- Botões de Ao -->
       <div class="buttons-container fade-in-element" data-delay="500">
-        <!-- BotÁ£o para cancelar os agendamentos -->
-        <button id="cancelButton" class="btn-cancel d-nÁƒ£one" onclick="abrirModalCancelamento()">
+        <!-- Botão para cancelar os agendamentos -->
+        <button id="cancelButton" class="btn-cancel d-none" onclick="abrirModalCancelamento()">
           <i class="bi bi-x-circle"></i> Cancelar Agendamentos
         </button>
 
-        <!-- BotÁ£o para voltar -->
+        <!-- Botão para voltar -->
         <button class="btn-custom" onclick="window.location.href='sejaBemVindo.html';">
           <i class="bi bi-arrow-left"></i> Voltar
         </button>

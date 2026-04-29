@@ -59,13 +59,13 @@
     transform: scale(0.95);
 }
 
-/* Novas regras para labels e campos do modal */
-#labModal .modal-title,
-#labModal .form-label {
+/* Novas regras para labels e campos do modal (correspondem a #laboratorioModal) */
+#laboratorioModal .modal-title,
+#laboratorioModal .form-label {
     color: var(--text-color);
 }
 
-#labModal .form-control {
+#laboratorioModal .form-control {
     background: rgba(8, 14, 44, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--text-color);
@@ -74,14 +74,14 @@
     transition: var(--transition);
 }
 
-#labModal .form-control:focus {
+#laboratorioModal .form-control:focus {
     background: rgba(8, 14, 44, 0.9);
     border-color: var(--accent-color);
     box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
 }
 
 /* Botões do Modal */
-#labModal .btn-primary {
+#laboratorioModal .btn-primary {
     background: var(--accent-color);
     border: none;
     padding: 0.8rem 1.5rem;
@@ -90,12 +90,12 @@
     transition: var(--transition);
 }
 
-#labModal .btn-primary:hover {
+#laboratorioModal .btn-primary:hover {
     background: #0b5ed7;
     transform: translateY(-2px);
 }
 
-#labModal .btn-secondary {
+#laboratorioModal .btn-secondary {
     background: rgba(255, 255, 255, 0.1);
     border: none;
     padding: 0.8rem 1.5rem;
@@ -104,9 +104,29 @@
     transition: var(--transition);
 }
 
-#labModal .btn-secondary:hover {
+#laboratorioModal .btn-secondary:hover {
     background: rgba(255, 255, 255, 0.15);
     transform: translateY(-2px);
+}
+
+/* Ajustes específicos para espaçamento e largura do modal */
+#laboratorioModal .modal-dialog {
+    max-width: 800px;
+    margin: 1.75rem auto;
+}
+
+#laboratorioModal .modal-content {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+#laboratorioModal .modal-body {
+    padding: 1.25rem 1.5rem;
+}
+
+#laboratorioModal .modal-header,
+#laboratorioModal .modal-footer {
+    padding: 1rem 1.5rem;
 }
 
 /* Reset e Estilos Globais */
@@ -275,6 +295,35 @@ body {
 .stat-icon i {
     font-size: 1.5rem;
     color: var(--accent-color);
+}
+
+/* Garantir visibilidade dos ícones mesmo em hover/overlays */
+.stat-icon,
+.stat-icon i,
+.page-header i,
+.page-header .btn i,
+.page-header .btn .bi,
+.card-title i {
+    z-index: 2;
+}
+
+/* Forçar cor legível nos ícones principais */
+.stat-icon i,
+.page-header i,
+.card-title i {
+    color: var(--text-color) !important;
+}
+
+/* Botões do header: manter ícone branco e visível */
+.page-header .btn i,
+.page-header .btn .bi {
+    color: var(--text-color) !important;
+}
+
+/* Em hover, garantir contraste do ícone quando o fundo muda */
+.stat-card:hover .stat-icon i,
+.lab-card:hover .lab-card-icon i {
+    color: var(--text-color) !important;
 }
 
 .stat-content h3 {
@@ -711,4 +760,9 @@ body {
 
 .ferramenta-item {
     animation: fadeIn 0.3s ease forwards;
+}
+
+/* Classe usada pelo observer do JS para animar ao entrar na viewport */
+.animate-in {
+    animation: fadeIn 0.5s ease forwards;
 }

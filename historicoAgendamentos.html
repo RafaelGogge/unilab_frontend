@@ -1,4 +1,4 @@
-﻿<!-- CÁ³digo desenvolvido por Rafael V. Gogge -->
+﻿<!-- Código desenvolvido por Rafael V. Gogge -->
 <!-- Direitos reservados Unilab  2025 -->
 <!-- GitHub: https://github.com/RafaelGogge -->
 <!DOCTYPE html>
@@ -7,10 +7,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="HistÁ³rico de Agendamentos - UniLab" />
+  <meta name="description" content="Histórico de Agendamentos - UniLab" />
   <meta name="author" content="Rafael V. Gogge">
   <meta name="copyright" content=" 2025 Rafael V. Gogge">
-  <title>UniLab - HistÁ³rico de Agendamentos</title>
+  <title>UniLab - Histórico de Agendamentos</title>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <!-- Bootstrap Icons -->
@@ -46,7 +46,7 @@
 
 <body class="d-flex flex-column min-vh-100">
   <!-- Skip link para acessibilidade -->
-  <a href="#main-content" class="skip-link">Pular para o conteÁºdo principal</a>
+  <a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
 
   <!-- Navbar -->
   <header class="navbar navbar-expand-lg navbar-dark fixed-top transition-all duration-300" id="navbar">
@@ -62,7 +62,7 @@
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
             <a class="nav-link" href="sejaBemVindo.html">
-              <i class="bi bi-house-door me-1"></i>InÁ­cio
+              <i class="bi bi-house-door me-1"></i>Início
             </a>
           </li>
           <li class="nav-item">
@@ -72,25 +72,25 @@
           </li>
           <li class="nav-item">
             <a class="nav-link active" href="historicoAgendamentos.html">
-              <i class="bi bi-clock-history me-1"></i>HistÁ³rico
+              <i class="bi bi-clock-history me-1"></i>Histórico
             </a>
           </li>
         </ul>
         <div class="d-flex align-items-center">
-          <!-- NotificaÁ§Áµes -->
-          <div class="nÁƒ£otification-bell me-3" data-bs-toggle="modal" data-bs-target="#nÁƒ£otificationModal">
+          <!-- Notificações -->
+          <div class="notification-bell me-3" data-bs-toggle="modal" data-bs-target="#notificationModal">
             <i class="bi bi-bell-fill fs-5 text-white hover:text-accent transition-colors duration-300"></i>
-            <span class="nÁƒ£otification-badge">3</span>
+            <span class="notification-badge">3</span>
           </div>
 
-          <!-- Dropdown do UsuÁ¡rio -->
+          <!-- Dropdown do Usuário -->
           <div class="dropdown">
             <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button"
               data-bs-toggle="dropdown" aria-expanded="false">
               <div class="avatar-circle me-2">
                 <i class="bi bi-person-fill"></i>
               </div>
-              <span class="user-name">UsuÁ¡rio</span>
+              <span class="user-name">Usuário</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
               <li>
@@ -115,10 +115,10 @@
 
   <!-- Conteúdo Principal -->
   <main id="main-content" class="container py-5">
-    <!-- Cabealho da PÁ¡gina -->
+    <!-- Cabeçalho da Página -->
     <div class="page-header d-flex justify-content-between align-items-center mb-4">
       <div>
-        <h1><i class="bi bi-clock-history"></i> HistÁ³rico de Agendamentos</h1>
+        <h1><i class="bi bi-clock-history"></i> Histórico de Agendamentos</h1>
         <p class="lead">Visualize e gerencie seus agendamentos anteriores</p>
       </div>
       <div>
@@ -134,7 +134,7 @@
         <div class="card-body">
           <form id="filterForm" class="row g-3">
             <div class="col-md-3">
-              <label for="dataInicio" class="form-label">Data InÁ­cio</label>
+              <label for="dataInicio" class="form-label">Data Início</label>
               <input type="date" class="form-control" id="dataInicio">
             </div>
             <div class="col-md-3">
@@ -142,10 +142,10 @@
               <input type="date" class="form-control" id="dataFim">
             </div>
             <div class="col-md-3">
-              <label for="laboratorio" class="form-label">LaboratÁ³rio</label>
+              <label for="laboratorio" class="form-label">Laboratório</label>
               <select class="form-select" id="laboratorio">
                 <option value="">Todos</option>
-                <!-- Opes sero preenchidas via JavaScript -->
+                <!-- Opções serão preenchidas via JavaScript -->
               </select>
             </div>
             <div class="col-md-3">
@@ -177,20 +177,20 @@
           <tr>
             <th>Data</th>
             <th>Horário</th>
-            <th>LaboratÁ³rio</th>
+            <th>Laboratório</th>
             <th>Professor</th>
             <th>Status</th>
-            <th>AÁ§Áµes</th>
+            <th>Ações</th>
           </tr>
         </thead>
         <tbody id="agendamentosTable">
-          <!-- Dados sero preenchidos via JavaScript -->
+          <!-- Dados serão preenchidos via JavaScript -->
         </tbody>
       </table>
     </div>
 
-    <!-- PaginaÁ§Á£o -->
-    <nav aria-label="NavegaÁ§Á£o de páginas" class="mt-4">
+    <!-- Paginação -->
+    <nav aria-label="Navegação de páginas" class="mt-4">
       <ul class="pagination justify-content-center">
         <li class="page-item disabled">
           <a class="page-link" href="#" tabindex="-1">Anterior</a>
@@ -199,23 +199,23 @@
         <li class="page-item"><a class="page-link" href="#">2</a></li>
         <li class="page-item"><a class="page-link" href="#">3</a></li>
         <li class="page-item">
-          <a class="page-link" href="#">PrÁ³ximo</a>
+          <a class="page-link" href="#">Próximo</a>
         </li>
       </ul>
     </nav>
   </main>
 
-  <!-- Modal de NotificaÁ§Áµes -->
-  <div class="modal fade" id="nÁƒ£otificationModal" tabindex="-1">
+  <!-- Modal de Notificações -->
+  <div class="modal fade" id="notificationModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">NotificaÁ§Áµes</h5>
+          <h5 class="modal-title">Notificações</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          <div class="nÁƒ£otification-list">
-            <!-- NotificaÁ§Áµes sero inseridas via JavaScript -->
+          <div class="notification-list">
+            <!-- Notificações serão inseridas via JavaScript -->
           </div>
         </div>
         <div class="modal-footer">
@@ -235,7 +235,7 @@
         </div>
         <div class="modal-body">
           <div class="detalhes-content">
-            <!-- Detalhes sero preenchidos via JavaScript -->
+            <!-- Detalhes serão preenchidos via JavaScript -->
           </div>
         </div>
         <div class="modal-footer">
@@ -267,3 +267,11 @@
 </body>
 
 </html>
+
+
+
+
+
+
+
+

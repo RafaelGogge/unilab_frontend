@@ -1,4 +1,4 @@
-﻿<!-- CÁ³digo desenvolvido por Rafael V. Gogge -->
+﻿<!-- Código desenvolvido por Rafael V. Gogge -->
 <!-- Direitos reservados Unilab  2025 -->
 <!-- GitHub: https://github.com/RafaelGogge -->
 <!DOCTYPE html>
@@ -47,7 +47,7 @@
 
 <body class="d-flex flex-column min-vh-100">
   <!-- Skip Link para Acessibilidade -->
-  <a href="#main-content" class="skip-link">Pular para o conteÁºdo principal</a>
+  <a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
 
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-light fixed-top">
@@ -62,7 +62,7 @@
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
             <a class="nav-link" href="index.html">
-              <i class="bi bi-house"></i>InÁ­cio
+              <i class="bi bi-house"></i>Início
             </a>
           </li>
           <li class="nav-item">
@@ -88,17 +88,17 @@
         </div>
 
         <!-- Feedback Messages -->
-        <div id="feedback" class="alert alert-dismissible fade show" style="display: nÁƒ£one;" role="alert"></div>
+        <div id="feedback" class="alert alert-dismissible fade show" style="display: none;" role="alert"></div>
 
-        <!-- FormulÁ¡rio de Login -->
-        <form id="loginForm" class="needs-validation animate-form" nÁƒ£ovalidate>
+        <!-- Formulário de Login -->
+        <form id="loginForm" class="needs-validation animate-form" novalidate>
           <div class="form-floating mb-3 input-group-animate">
-            <input type="text" class="form-control" id="username" name="username" placeholder="UsuÁ¡rio" required>
-            <label for="username">UsuÁ¡rio</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="Usuário" required>
+            <label for="username">Usuário</label>
             <div class="input-icon">
               <i class="bi bi-person"></i>
             </div>
-            <div class="invalid-feedback">Por favor, insira seu usuÁ¡rio.</div>
+            <div class="invalid-feedback">Por favor, insira seu usuário.</div>
           </div>
 
           <div class="form-floating mb-3 input-group-animate">
@@ -121,7 +121,7 @@
           <div class="d-grid gap-2 animate-button">
             <button type="submit" class="btn btn-primary btn-login">
               <span class="btn-text"><i class="bi bi-box-arrow-in-right"></i>Entrar</span>
-              <span class="btn-loader d-nÁƒ£one">
+              <span class="btn-loader d-none">
                 <span class="spinner"></span>
                 <span>Entrando...</span>
               </span>
@@ -138,7 +138,7 @@
     </div>
   </main>
 
-  <!-- Modal de RecuperaÁ§Á£o de Senha -->
+  <!-- Modal de Recuperação de Senha -->
   <div class="modal fade" id="recoveryModal" tabindex="-1" aria-labelledby="recoveryModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -147,7 +147,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p>Digite seu e-mail cadastrado para receber as instruÁ§Áµes de recuperaÁ§Á£o de senha.</p>
+          <p>Digite seu e-mail cadastrado para receber as instruções de recuperação de senha.</p>
           <form id="recoveryForm">
             <div class="form-floating mb-3 input-group-animate">
               <input type="email" class="form-control" id="recoveryEmail" placeholder="E-mail" required>
@@ -155,7 +155,7 @@
               <div class="input-icon">
                 <i class="bi bi-envelope"></i>
               </div>
-              <div class="invalid-feedback">Por favor, insira um e-mail vÁ¡lido.</div>
+              <div class="invalid-feedback">Por favor, insira um e-mail válido.</div>
             </div>
           </form>
         </div>
@@ -163,7 +163,7 @@
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
           <button type="button" class="btn btn-primary" id="sendRecovery">
             <span class="btn-text"><i class="bi bi-send"></i>Enviar</span>
-            <span class="btn-loader d-nÁƒ£one">
+            <span class="btn-loader d-none">
               <span class="spinner"></span>
               <span>Enviando...</span>
             </span>
